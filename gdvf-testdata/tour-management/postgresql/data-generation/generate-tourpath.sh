@@ -1,14 +1,18 @@
 #!/bin/bash
 
-max_employee_line=`less dummy-employee-ids.txt | wc -l | sed "s/^[[:space:]]*//g"`
+max_location_line=`less dummy-location-ids.txt | wc -l | sed "s/^[[:space:]]*//g"`
+max_tour_line=`less dummy-tour-ids.txt | wc -l | sed "s/^[[:space:]]*//g"`
 
 getRandomLineNumber() {
 	echo "($RANDOM % $1) + 1" | bc
 }
 
 makeInsertQuery() {
-	rand_employee_line=`getRandomLineNumber ${max_employee_line}`
-	rand_employee=`sed -n "${rand_employee_line}p" dummy-employee-ids.txt`
+	rand_location_line=`getRandomLineNumber ${max_location_line}`
+	rand_location=`sed -n "${rand_location_line}p" dummy-location-ids.txt`
+
+	rand_tour_line=`getRandomLineNumber ${max_tour_line}`
+	rand_tour=`sed -n "${rand_tour_line}p" dummy-tour-ids.txt`
 
 	rand_cost=`echo "($RANDOM % 1000) * 100" | bc`
 
@@ -25,7 +29,7 @@ makeInsertQuery() {
 	rand_end_day_interval=`echo "($RANDOM % 20) + 3" | bc`
 	rand_end_date="(to_timestamp('${rand_date}', 'YYYY-MM-DD HH24:MI:SS') + INTERVAL '${rand_end_day_interval} day')"
 
-	echo "INSERT INTO tm.tour(startTime, endTime, costPerPerson, planOwnerId) VALUES(${rand_start_date}, ${rand_end_date}, ${rand_cost}, ${rand_employee});"
+	echo "INSERT INTO tm.tourpath(startTime, endTime, tourId, locationId) VALUES(${rand_start_date}, ${rand_end_date}, ${rand_tour}, ${rand_location});"
 }
 
 for i in `seq 1 1000`
