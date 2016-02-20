@@ -2,51 +2,42 @@
 # for user given natural language query. `Tornado` (a Python web framework) is used to 
 # manage the websocket communtication.
 
-import tornado.web
-import tornado.ioloop
-import tornado.websocket
+from tornado import websocket, web, ioloop
 from query_suggestor import QuerySuggestor
 import json
 from StringIO import StringIO
 
 qs = QuerySuggestor()
-io = StringIO()
 
-def createResponse(valid, suggestions):
-    dict = {}
-    dict['valid'] = valid
-    dict['suggestions'] = suggestions
-    dict['chart'] = 'pie'
+clients = []
 
-    return dict
-
-
-class WSHandler(tornado.websocket.WebSocketHandler):
+class SocketHandler(websocket.WebSocketHandler):
     # To accept all cross-origin traffic
     def check_origin(self, origin):
         return True
 
     # Invoked when a new WebSocket is opened
     def open(self):
-    	print 'Connection opened.'
+        if self not in clients:
+            clients.append(self)
+        print 'Connection opened.'
     
     # Handles incoming messages on the WebSocket
     def on_message(self, message):
-        sug_arr = qs.get_suggestions(message.strip())
-        respJson = createResponse(True, sug_arr)
-        io.truncate(0)
-        json.dump(respJson, io)
-        self.write_message(io.getvalue())
+        suggestions = qs.get_suggestions(message.strip())
+        self.write_message(json.dumps(suggestions))
 
     # Invoked when the WebSocket is closed
     def on_close(self):
-      print 'Connection closed.'
+        if self in clients:
+            clients.remove(self)
+        print 'Connection closed.'
 
 # Open the socket connection on `/ws` route
-application = tornado.web.Application([
-    (r'/ws', WSHandler)
+application = web.Application([
+    (r'/ws', SocketHandler)
 ])
 
 if __name__ == "__main__":
     application.listen(9090)
-    tornado.ioloop.IOLoop.instance().start()
+    ioloop.IOLoop.instance().start()
