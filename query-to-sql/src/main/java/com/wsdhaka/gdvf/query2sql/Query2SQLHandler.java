@@ -5,6 +5,7 @@ import spark.Response;
 
 public class Query2SQLHandler {
     public Query2SQLResponse doGet(Request req, Response res) {
+        res.header("Content-Type", "application/json");
         //req.body()
         return convert(req.params("q"));
     }
