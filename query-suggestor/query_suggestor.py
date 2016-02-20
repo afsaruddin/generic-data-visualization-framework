@@ -34,13 +34,19 @@ class QuerySuggestor:
                 The initial query 
         """
         
+        result = {'suggestions': [], 'select': []};
         words = pos_tag(nltk.word_tokenize(query))
+        result['select'] = [word for word,pos in words if pos.startswith('NN')]
+        result['suggestions'] = ['show ' + ' '.join([word for word,pos in words 
+                            if pos.startswith('NN') 
+                            or pos == 'IN'
+                            or pos == 'DT'])]
         
-        # return words that are nouns
-        return [word for word,pos in words if pos.startswith('NN')]
+        # return suggestions and required tokens
+        return result
         
         
-#qs = QuerySuggestor()
-#inputs = ['which locations are covered?', 'what type of persons travels ?', 'who are travelling ?', 'what is the tour schedule ?', 'what is the cost for a tour?']
-#for q in inputs:
-#    print qs.get_suggestions(q)
+qs = QuerySuggestor()
+inputs = ['which locations are covered?', 'what type of persons travels ?', 'who are travelling ?', 'what is the tour schedule ?', 'what is the cost for a tour?']
+for q in inputs:
+    print qs.get_suggestions(q)
