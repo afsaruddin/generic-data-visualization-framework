@@ -41,7 +41,8 @@ class QuerySuggestor:
         suggestion_text['text'] = 'show ' + ' '.join([word for word,pos in words 
                             if pos.startswith('NN') 
                             or pos == 'IN'
-                            or pos == 'DT'])
+                            or pos == 'DT'
+                            or pos == 'CC'])
         result['suggestions'] = [suggestion_text]
         
         # return suggestions and required tokens
