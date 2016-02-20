@@ -48,7 +48,6 @@
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
             <version>20160212</version>
-            <scope>test</scope>
         </dependency>
 
         <dependency>

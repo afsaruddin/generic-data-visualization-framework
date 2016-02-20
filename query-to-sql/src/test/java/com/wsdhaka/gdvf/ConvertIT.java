@@ -1,5 +1,6 @@
 package com.wsdhaka.gdvf;
 
+import com.wsdhaka.gdvf.utils.RESTUtils;
 import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Assert;
@@ -25,7 +26,7 @@ public class ConvertIT extends BaseIT {
 
     @Test
     public void testOk() throws IOException {
-        JSONObject response = new JSONObject(doGet(HTTP_QUERY_TO_SQL_HOST + "/querytosql"));
+        JSONObject response = new JSONObject(RESTUtils.doGet(HTTP_QUERY_TO_SQL_HOST + "/querytosql"));
         Assert.assertNotNull(response);
         Assert.assertEquals("SELECT name FROM profession", response.getString("sql"));
     }
