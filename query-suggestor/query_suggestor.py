@@ -46,7 +46,7 @@ class QuerySuggestor:
         return result
         
         
-qs = QuerySuggestor()
-inputs = ['which locations are covered?', 'what type of persons travels ?', 'who are travelling ?', 'what is the tour schedule ?', 'what is the cost for a tour?']
-for q in inputs:
-    print qs.get_suggestions(q)
+#qs = QuerySuggestor()
+#inputs = ['which locations are covered?', 'what type of persons travels ?', 'who are travelling ?', 'what is the tour schedule ?', 'what is the cost for a tour?']
+#for q in inputs:
+#    print qs.get_suggestions(q)
