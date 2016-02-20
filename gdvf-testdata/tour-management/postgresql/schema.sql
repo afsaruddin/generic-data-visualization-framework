@@ -45,10 +45,10 @@ CREATE TABLE tm.tour (
 
 CREATE TABLE tm.tourpath (
 	pathId SERIAL NOT NULL,
-	startTime TIMESTAMP NOT NULL,
-	endTime TIMESTAMP NOT NULL,
 	tourId INT NOT NULL REFERENCES tm.tour (tourId),
 	locationId INT NOT NULL REFERENCES tm.location (locationId),
+	startTime TIMESTAMP NOT NULL,
+	endTime TIMESTAMP NOT NULL,
 
 	PRIMARY KEY (pathId)
 );
