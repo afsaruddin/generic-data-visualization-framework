@@ -7,9 +7,7 @@ Python 2.7.9
 
 Natural Language Toolkit http://www.nltk.org/install.html
 
-```pyhton
-import nltk
-nltk.download('punkt')
-```
+
+`python -m nltk.downloader all`
 
 `Tornado` [`pip install tornado`]
