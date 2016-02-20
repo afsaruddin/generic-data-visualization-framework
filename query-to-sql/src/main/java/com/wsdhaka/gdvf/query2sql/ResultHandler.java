@@ -8,13 +8,15 @@ import spark.Response;
 @Deprecated
 public class ResultHandler {
     public String getDummyDataForResult(Request req, Response res) {
+        res.header("Content-Type", "application/json");
+
         String q = req.params("q");
         if (StringUtils.isNotEmpty(q)) {
             new JSONObject(q).getJSONArray("select");
         }
         //new Query2SQLHandler().;
 
-        return " [" +
+        return "[" +
                 "{'age': 20, 'population': 7040659}," +
                 "{'age': 25, 'population': 7704659 }," +
                 "{'age': 30, 'population': 27046599 }," +
