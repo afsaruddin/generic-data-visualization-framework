@@ -1,21 +1,21 @@
 CREATE TYPE tm.gender AS ENUM ('male', 'female');
 
 CREATE TABLE tm.profession (
-	professionId INT NOT NULL,
+	professionId SERIAL NOT NULL,
 	name TEXT NOT NULL,
 
 	PRIMARY KEY (professionId)
 );
 
 CREATE TABLE tm.location (
-	locationId INT NOT NULL,
+	locationId SERIAL NOT NULL,
 	name TEXT NOT NULL,
 
 	PRIMARY KEY (locationId)
 );
 
 CREATE TABLE tm.traveller (
-	travellerId BIGINT NOT NULL,
+	travellerId SERIAL NOT NULL,
 	name TEXT NOT NULL,
 	gender tm.gender NOT NULL,
 	age INT NOT NULL CHECK ( age > 0 ),
@@ -25,7 +25,7 @@ CREATE TABLE tm.traveller (
 );
 
 CREATE TABLE tm.employee (
-	employeeId BIGINT NOT NULL,
+	employeeId SERIAL NOT NULL,
 	name TEXT NOT NULL,
 	gender tm.gender NOT NULL,
 	age INT NOT NULL CHECK ( age > 0 ),
@@ -34,7 +34,7 @@ CREATE TABLE tm.employee (
 );
 
 CREATE TABLE tm.tour (
-	tourId BIGINT NOT NULL,
+	tourId SERIAL NOT NULL,
 	startTime TIMESTAMP NOT NULL,
 	endTime TIMESTAMP NOT NULL,
 	costPerPerson REAL NOT NULL,
@@ -44,17 +44,17 @@ CREATE TABLE tm.tour (
 );
 
 CREATE TABLE tm.tourpath (
-	pathId BIGINT NOT NULL,
-	startTime TIMESTAMP NOT NULL,
-	endTime TIMESTAMP NOT NULL,
+	pathId SERIAL NOT NULL,
 	tourId INT NOT NULL REFERENCES tm.tour (tourId),
 	locationId INT NOT NULL REFERENCES tm.location (locationId),
+	startTime TIMESTAMP NOT NULL,
+	endTime TIMESTAMP NOT NULL,
 
 	PRIMARY KEY (pathId)
 );
 
 CREATE TABLE tm.tourtraveller (
-	tourtravellerId BIGINT NOT NULL,
+	tourtravellerId SERIAL NOT NULL,
 	tourId INT NOT NULL REFERENCES tm.tour (tourId),
 	travellerId INT NOT NULL REFERENCES tm.traveller (travellerId),
 
@@ -62,7 +62,7 @@ CREATE TABLE tm.tourtraveller (
 );
 
 CREATE TABLE tm.travellerfeedback (
-	travellerfeedbackId BIGINT NOT NULL,
+	travellerfeedbackId SERIAL NOT NULL,
 	tourId INT NOT NULL REFERENCES tm.tour (tourId),
 	travellerId INT NOT NULL REFERENCES tm.traveller (travellerId),
 	feedback TEXT NOT NULL,
