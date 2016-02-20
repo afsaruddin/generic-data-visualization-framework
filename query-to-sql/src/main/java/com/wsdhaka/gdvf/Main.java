@@ -9,6 +9,6 @@ public class Main {
         CORSFilter.apply();
 
         Spark.post("/querytosql", "application/json", (req, res) -> new Query2SQLHandler().doGet(req, res), new JsonTransformer());
-        Spark.get("/submitquery", "application/json", (req, res) -> new ResultHandler().getDummyDataForResult(req, res));
+        Spark.post("/submitquery", "application/json", (req, res) -> new ResultHandler().getDummyDataForResult(req, res));
     }
 }
