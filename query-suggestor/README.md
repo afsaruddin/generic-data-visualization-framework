@@ -6,6 +6,9 @@ For publishing the suggestions, it will have 2 way WebSocket communications.
 Python 2.7.9
 
 Natural Language Toolkit http://www.nltk.org/install.html
+
+`sudo pip install -U nltk`
+
 `python -m nltk.downloader all`
 
 Tornado
