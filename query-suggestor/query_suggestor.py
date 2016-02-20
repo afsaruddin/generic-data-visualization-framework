@@ -34,13 +34,15 @@ class QuerySuggestor:
                 The initial query 
         """
         
-        result = {'suggestions': [], 'select': []};
+        result = {'suggestions': []};
+        suggestion_text = {};
         words = pos_tag(nltk.word_tokenize(query))
-        result['select'] = [word for word,pos in words if pos.startswith('NN')]
-        result['suggestions'] = ['show ' + ' '.join([word for word,pos in words 
+        suggestion_text['select'] = [word for word,pos in words if pos.startswith('NN')]
+        suggestion_text['text'] = 'show ' + ' '.join([word for word,pos in words 
                             if pos.startswith('NN') 
                             or pos == 'IN'
-                            or pos == 'DT'])]
+                            or pos == 'DT'])
+        result['suggestions'] = [suggestion_text]
         
         # return suggestions and required tokens
         return result
