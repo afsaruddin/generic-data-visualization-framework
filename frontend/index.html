@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Generic Data Visualizer</title>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+  <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+  <script src="resources/d3/d3.min.js"></script>
+
+  <link rel="stylesheet" href="resources/css/style.css" type="text/css" media="screen" charset="utf-8" />
+  <link rel="stylesheet" href="resources/css/chartStyle.css" type="text/css" media="screen" charset="utf-8" />
+  <link rel="stylesheet" href="resources/bootstrap/css/bootstrap.min.css" type="text/css" media="screen" charset="utf-8" />
+</head>
+<body>
+  <div id="page-wrapper">
+    <div class="content">
+      <div class="row">
+        <div class="col-md-12">
+          <h1>Generic Data Visualizer</h1>
+        </div>
+      </div>
+
+        <div class="row" id="search">
+            <div class="col-md-12">
+            <div class="input-group">
+              <input type="text" id="searchBox" class="form-control" placeholder="Search for...">
+              <span class="input-group-btn">
+                <button class="btn btn-default" type="button"  id="button">Go!</button>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <button type="button" id="close">Close Connection</button>
+        <button type="button" id="result">Server Data</button>
+    </div>
+
+
+    <div class="chart" id="chart">
+    </div>
+
+  </div>
+
+  <script src="js/websocket.js"></script>
+  <script src="js/chart.js"></script>
+  <script>
+    $(function() {
+
+      $("#submit").click(function(){
+         var searchString = $("#searchBox").val().trim();
+         if(searchString) sendData(searchString);
+         else alert('please write something!');
+         $("#searchBox").val("");
+      });
+
+      $("#result").click(function(){
+         var data = getData();
+         alert(data);
+      });
+
+      $("#close").click(function(){
+        webSocket.close();
+      });
+
+      $( "#searchBox" ).keydown(function() {
+          var searchString = $("#searchBox").val();
+          sendData(searchString);
+      });
+
+      $('#searchBox').keypress(function(event) {
+          if (event.keyCode == '13') {
+            var searchString = $("#searchBox").val();
+            $.post("http://169.45.220.234:4567/submitquery", getSuggestion(searchString), function( data ) {
+                alert(data);
+            });
+          }
+      });
+
+
+      // var demo = ['demo' , 'demop' , 'abc' , 'pef'];
+      // $( "#searchBox").autocomplete({
+      //     source: demo
+      //   });
+
+      var barChartData = [ {'letter': 'A', 'frequency': 0.157}, {'letter': 'B', 'frequency': 0.197}, {'letter': 'C', 'frequency': 0.257}, {'letter': 'D', 'frequency': 0.357}, {'letter': 'D', 'frequency': 0.407 } ];
+      var pieChartData = [ {'age': 'A', 'population': 7040659}, {'age': 'B', 'population': 7704659 }, {'age': 'C', 'population': 27046599 }, {'age': 'D', 'population': 2804659 }, {'age': 'E', 'population' : 2704659 } ];
+      var data = [["demo", ["like", "call response", "dramatic intro", "has breaks", "male vocalist", "silly", "swing"]], [150, ["brassy", "like", "calm energy", "female vocalist", "swing", "fun"]], [170, ["calm energy", "instrumental", "swing", "like", "happy"]], [140, ["has breaks", "male vocalist", "swing", "piano", "banjo", "chill"]], [160, ["calm energy", "instrumental", "swing", "like", "interesting"]], [140, ["brassy", "like", "energy", "dramatic intro", "male vocalist", "baseball", "swing"]], [170, ["instrumental", "interesting", "high energy", "like", "swing"]], [140, ["instrumental", "energy", "like", "swing"]], [200, ["instrumental", "brassy", "dramatic intro", "like", "swing"]], [160, ["male vocalist", "brassy", "swing", "like", "my favorites"]], [130, ["like", "interesting", "dramatic intro", "male vocalist", "silly", "swing", "gospel"]], [160, ["like", "long intro", "announcer", "energy", "swing", "female vocalist"]], [170, ["instrumental", "swing", "bass", "like"]], [150, ["like", "interesting", "has breaks", "instrumental", "chunky", "swing", "banjo", "trumpet"]], [170, ["like", "has breaks", "male vocalist", "silly", "swing", "banjo"]], [190, ["instrumental", "banjo", "swing"]], [130, ["instrumental", "brassy", "banjo", "like", "swing"]], [160, ["brassy", "like", "energy", "instrumental", "big band", "jam", "swing"]], [150, ["like", "male vocalist", "live", "swing", "piano", "banjo", "chill"]], [150, ["like", "trick ending", "instrumental", "chunky", "swing", "chill"]], [120, ["brassy", "like", "female vocalist", "swing", "chill", "energy buildup"]], [150, ["brassy", "like", "interesting", "instrumental", "swing", "piano"]], [190, ["brassy", "like", "long intro", "energy", "baseball", "swing", "female vocalist"]], [180, ["calm energy", "female vocalist", "live", "like", "swing"]], [200, ["banjo", "like", "long intro", "interesting", "energy", "my favorites", "male vocalist", "silly", "swing", "fun", "balboa"]], [150, ["brassy", "calm energy", "chunky", "instrumental", "old-timey", "live", "swing"]], [160, ["like", "call response", "interesting", "instrumental", "calm energy", "swing"]], [180, ["interesting", "swing", "fast", "male vocalist"]], [150, ["calm energy", "chunky", "swing", "female vocalist", "like"]], [180, ["like", "has breaks", "male vocalist", "chunky", "silly", "swing"]], [140, ["instrumental", "brassy", "dramatic intro", "swing", "chill"]], [150, ["male vocalist", "trumpet", "like", "swing"]], [150, ["instrumental", "energy", "like", "has breaks", "swing"]], [180, ["brassy", "like", "energy", "has breaks", "instrumental", "has calm", "swing"]], [150, ["female vocalist", "swing"]], [170, ["instrumental", "brassy", "energy", "swing"]], [170, ["calm energy", "instrumental", "energy", "like", "swing"]], [190, ["brassy", "like", "instrumental", "high energy", "swing", "trumpet"]], [160, ["male vocalist", "energy", "swing", "old-timey"]], [170, ["like", "oldies", "my favorites", "fast", "male vocalist", "high energy", "swing"]]];
+
+      var movies = [
+          { title: "The Godfather", year: 1972, length: 175, budget: 6000000, rating: 9.1 },
+          { title: "The Shawshank Redemption", year: 1994, length: 142, budget: 25000000, rating: 9.1 },
+          { title: "The Lord of the Rings: The Return of the King", year: 2003, length: 251, budget: 94000000, rating: 9 },
+          { title: "The Godfather: Part II", year: 1974, length: 200, budget: 13000000, rating: 8.9 },
+          { title: "Shichinin no samurai", year: 1954, length: 206, budget: 500000, rating: 8.9 },
+          { title: "Buono, il brutto, il cattivo, Il", year: 1966, length: 180, budget: 1200000, rating: 8.8 },
+          { title: "Casablanca", year: 1942, length: 102, budget: 950000, rating: 8.8 },
+          { title: "The Lord of the Rings: The Fellowship of the Ring", year: 2001, length: 208, budget: 93000000, rating: 8.8 },
+          { title: "The Lord of the Rings: The Two Towers", year: 2002, length: 223, budget: 94000000, rating: 8.8 },
+          { title: "Pulp Fiction", year: 1994, length: 168, budget: 8000000, rating: 8.8 }
+      ];
+      // createBarChart(barChartData);
+      // createPieChart(pieChartData, false);
+      // createConceptMapChart(data);
+      createTable(movies);
+
+    });
+  </script>
+</body>
+</html>
