@@ -5,6 +5,8 @@ import spark.ResponseTransformer;
 
 public class JsonResponseTransformer implements ResponseTransformer {
     public String render(Object model) throws Exception {
-        return JSONUtils.toJson(model);
+        String responseJson = JSONUtils.toJson(model);
+        System.out.println("Response:\n" + responseJson);
+        return responseJson;
     }
 }
