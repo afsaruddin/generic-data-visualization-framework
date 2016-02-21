@@ -3,6 +3,8 @@
 import nltk
 import numpy as np
 from nltk.tag import pos_tag
+from gensim.models import Word2Vec
+from nltk.corpus import wordnet as wn
 
 class QueryTokenizer:
     """ Query tokenizer contains necessary methods
@@ -27,11 +29,19 @@ class QueryTokenizer:
             self.db_schema = db_schema
             
         for key in self.db_schema:
-            self.db_schema[key] = self.sort(self.db_schema[key]);
+            self.db_schema[key] = sorted(self.db_schema[key]);
             
         self.keywords = [item for key in list(self.db_schema) for item in self.db_schema[key]]
         self.keywords += list(self.db_schema)
         self.keywords = sorted(np.unique(self.keywords).tolist())
+        
+        self.word_predictor = Word2Vec(self.keywords)
+        
+    #def get_max_similar_word(self, w1, w2, sim=wn.path_similarity):
+    #    syn_set1 = wn.synsets(w1)
+    #    syn_set2 = wn.synsets(w2)
+    #    
+    #    return (score, word) for 
                     
     # Get final suggestion query with selected tokens needed to build SQL             
     def get_final_query_with_tokens(self, query):
@@ -47,6 +57,8 @@ class QueryTokenizer:
         result = {};
         words = pos_tag(nltk.word_tokenize(query))
         result['select'] = [word for word,pos in words if pos.startswith('NN')]
+        for token in result['select']:
+            print self.word_predictor.most_similar(token)
         result['query'] = query
         
         # return query and required tokens
@@ -56,4 +68,4 @@ class QueryTokenizer:
 qs = QueryTokenizer()
 inputs = ['s', 'what type of persons travels ?', 'who are travelling ?', 'what is the tour schedule ?', 'what is the cost for a tour?']
 for q in inputs:
-    print qs.get_final_query_with_tokens(q)
+    qs.get_final_query_with_tokens(q)
