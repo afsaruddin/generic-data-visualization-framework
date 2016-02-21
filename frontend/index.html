@@ -33,19 +33,34 @@
             </div>
           </div>
         </div>
+
+        <div class="row loader">
+          <div class="col-md-12">
+            <span <i class="fa fa-spinner fa-pulse fa-3x"></i></span>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">
+            <div class="other-charts pull-right">
+              <a href="javascript:void(0);" title="Bar Chart" id="barChart"><i class="fa fa-bar-chart fa-2x"></i></a>
+              <a href="javascript:void(0);" title="Donut Chart" id="donutChart"><i class="fa fa-circle-o-notch fa-2x"></i></a>
+              <a href="javascript:void(0);" title="Pie Chart" id="pieChart"><i class="fa fa-pie-chart fa-2x"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">
+            <div class="chart" id="chart"></div>
+          </div>
+        </div>
+
     </div>
 
-
-    <div class="chart" id="chart">
-    </div>
-    <div>
+    <div class="table-wrapper">
       <label id="totalRows" class="totalRows"></label>
-      <!-- <label id="barChart" class="barChart"><a href="javascript:void(0);" ><i class="fa fa-bar-chart fa-stack-2x"></i></a></label> -->
-      <!-- <label id="pieChart" class="pieChart"><a href="#" ><i class="fa fa-pie-chart fa-stack-2x"></i></a></label> -->
-    </div>
-
-    <div class="tableData" id="tableData">
-
+      <div class="tableData" id="tableData">
     </div>
 
   </div>
@@ -55,12 +70,21 @@
   <script>
     $(function() {
 
+      var populateData = function () {
+        $('.loader').css('display', 'block');
+        $(".tableData").empty();
+        $('#totalRows').empty();
+        sendPostRequest();
+      };
+
       $("#go").click(function() {
-          sendPostRequest();
+          populateData();
       });
 
       $('#searchBox').keypress(function(event) {
-          if (event.keyCode == '13') sendPostRequest();
+          if (event.keyCode == '13') {
+            populateData();
+          }
       });
 
      var timer;
