@@ -1,9 +1,11 @@
 from flask import Flask
 from flask_restful import Api
+from flask.ext.cors import CORS
 
 from resources.queryhandler import QueryHandler
 
 app = Flask(__name__)
+CORS(app)
 api = Api(app)
 
 app.config.from_object('settings.configuemodule.DevelopmentConfig')
