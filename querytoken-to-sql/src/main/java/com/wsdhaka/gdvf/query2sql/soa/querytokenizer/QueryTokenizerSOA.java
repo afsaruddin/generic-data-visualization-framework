@@ -20,7 +20,7 @@ public class QueryTokenizerSOA {
 
     public QueryTokenizerResponse tokenizeQuery(String q) throws IOException {
         try {
-            return JSONUtils.fromJson(RESTUtils.doGet(TOKENIZER_SERVICE_URL + "?q=" + q), QueryTokenizerResponse.class);
+            return JSONUtils.fromJson(RESTUtils.doGet(TOKENIZER_SERVICE_URL + "?q=" + RESTUtils.encode(q)), QueryTokenizerResponse.class);
         } catch (IOException e) {
             e.printStackTrace();
             throw new IOException("Unable to tokenize the query");
