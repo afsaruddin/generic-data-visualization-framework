@@ -40,6 +40,7 @@ class QuerySuggestor:
     def get_suggestions_from_schema(self, query):
         last_word = query.split()[-1]
         query_wo_lastword = ' '.join(query.split()[:-1])
+        if ( len(query_wo_lastword) == 0 ): query_wo_lastword= 'show'
 
         if (last_word in self.db_schema):
             return [query + ' ' + next_word for next_word in self.db_schema[last_word]]
@@ -99,6 +100,6 @@ class QuerySuggestor:
         
         
 qs = QuerySuggestor()
-inputs = ['which traveller', 'what type of persons travels ?', 'who are travelling ?', 'what is the tour schedule ?', 'what is the cost for a tour?']
+inputs = ['s', 'what type of persons travels ?', 'who are travelling ?', 'what is the tour schedule ?', 'what is the cost for a tour?']
 for q in inputs:
     print qs.get_suggestions(q)
