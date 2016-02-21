@@ -1,5 +1,4 @@
 
-
 class Config(object):
     DEBUG = False
     DATABASE_URI = "host='localhost' dbname='gdvf' user='gdvf_user' password='gdvf_PASS'"
@@ -8,8 +7,6 @@ class Config(object):
 
 class DevelopmentConfig(Config):
     DEBUG = True
-
-
 
 class ProductionConfig(Config):
     DEBUG = False

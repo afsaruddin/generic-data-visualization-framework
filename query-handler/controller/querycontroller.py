@@ -8,18 +8,10 @@ class QueryHandlerController:
         pass
 
     def process_query(self, query):
-        ret_values = []
 
-        #print ('process_query method is called')
-        #print(query)
         url = current_app.config.get('QUERY_PROCESSING_URL')
 
-        #print ("url is {}").format(url)
-
         record_data = HttpUtil.post_url(url, query)
-
-        #pprint.pprint(record_data)
-        #print ('Quries will be proceed soon')
 
         return record_data
 
@@ -28,22 +20,21 @@ class QueryHandlerController:
 
         query_data = DbUtil.execute_query(sql_query)
 
-
         if query_data['success'] == True:
             processed_datas = []
 
             # TODO : Have write this code in Lamda
-            i =0
+            i = 0
             for x in query_data['data']:
-                j=0
+                j = 0
                 processed_data = {}
                 for y in query_data['column_names']:
                     processed_data[y] = x[j]
-                    j = j+1
+                    j += 1
                 processed_datas.append(processed_data)
-                i=i+1
+                i += 1
 
             return {'success': True,
-             'data': processed_datas}
+                    'data': processed_datas}
         else:
             return {'success': False}
