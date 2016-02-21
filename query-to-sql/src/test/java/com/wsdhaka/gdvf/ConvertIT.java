@@ -26,8 +26,15 @@ public class ConvertIT extends BaseIT {
 
     @Test
     public void testOk() throws IOException {
-        JSONObject response = new JSONObject(RESTUtils.doPost(HTTP_QUERY_TO_SQL_HOST + "/querytosql", ""));
+        testQueryToSQL("{\"select\": [ \"location\" ]}", "SELECT name FROM location");
+        testQueryToSQL("{\"select\": [ \"name\" ]}", "SELECT name FROM profession");
+        testQueryToSQL("{\"select\": [ \"tour\", \"schedule\" ]}", "SELECT startTime, endTime, costPerPerson FROM tour");
+        testQueryToSQL("{\"select\": [ \"tour\", \"cost\" ]}", "SELECT startTime, endTime, costPerPerson FROM tour");
+    }
+
+    private void testQueryToSQL(String humanQuery, String expectedSQL) throws IOException {
+        JSONObject response = new JSONObject(RESTUtils.doPost(HTTP_QUERY_TO_SQL_HOST + "/querytosql", humanQuery));
         Assert.assertNotNull(response);
-        Assert.assertEquals("SELECT name FROM profession", response.getString("sql"));
+        Assert.assertEquals(expectedSQL, response.getString("sql"));
     }
 }
