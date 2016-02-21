@@ -1,5 +1,9 @@
 package com.wsdhaka.gdvf.query2sql;
 
+import com.wsdhaka.gdvf.query2sql.dataconfig.DataConfigHandler;
+import com.wsdhaka.gdvf.query2sql.dataconfig.DataEntityRelation;
+import com.wsdhaka.gdvf.query2sql.dataconfig.DataEntityStructure;
+import com.wsdhaka.gdvf.query2sql.dataconfig.DataKeyStructure;
 import com.wsdhaka.gdvf.query2sql.soa.querytokenizer.QueryTokenizerResponse;
 import com.wsdhaka.gdvf.query2sql.soa.querytokenizer.QueryTokenizerSOA;
 import com.wsdhaka.gdvf.utils.JSONUtils;
@@ -9,7 +13,7 @@ import spark.Request;
 import spark.Response;
 
 import java.io.IOException;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -32,68 +36,122 @@ public class Query2SQLHandler {
             return EMPTY_RESPONSE;
         }
 
-        // Split the list into (a) columns names and (b) table names
-        Set<String> selectItemsForColumns = token.getSelect()
+        // Filter out all unknown tokens and add the meaningFulTokens.
+        List<String> meaningFulTokens = new ArrayList<>();
+        token.getSelect()
                 .stream()
-                .filter((e) -> Query2SQLTokenHandler.getInstance().getTableNames(e) != null)
+                .map((e) -> e.toLowerCase())
+                .forEach((e) -> meaningFulTokens.addAll(DataConfigHandler.getInstance().getAliases(e)));
+
+        // Split the list into (a) keys and (b) entity names
+        Set<String> userSelectedKeys = meaningFulTokens
+                .stream()
+                .filter((e) -> DataConfigHandler.getInstance().isKey(e))
                 .collect(Collectors.toSet());
 
-        Set<String> selectItemsForTable = token.getSelect()
+        Set<String> userSelectedEntities = meaningFulTokens
                 .stream()
-                .filter((e) -> Query2SQLTokenHandler.getInstance().getColumnNames(e) != null)
+                .filter((e) -> DataConfigHandler.getInstance().isEntity(e))
                 .collect(Collectors.toSet());
 
-        String aTableName = determineTableNameToSelect(selectItemsForColumns, selectItemsForTable);
-        if (StringUtils.isEmpty(aTableName)) {
+        // Find the entities (the bazar) where we can get the result for user's keys.
+        List<String> entitiesStore = userSelectedKeys
+                .stream()
+                .filter((e) -> DataConfigHandler.getInstance().getStoreEntity(e) != null)
+                .map((e) -> DataConfigHandler.getInstance().getStoreEntity(e))
+                .collect(Collectors.toList());
+
+        // Add user's entities (if existent).
+        entitiesStore.addAll(userSelectedEntities
+                        .stream()
+                        .filter((e) -> DataConfigHandler.getInstance().getStoreEntity(e) != null)
+                        .map((e) -> DataConfigHandler.getInstance().getStoreEntity(e))
+                        .collect(Collectors.toList())
+        );
+
+        DataEntityRelation relationToSearchIn = getRelationToSearchIn(entitiesStore);
+
+        // Entities of the selected relationship.
+        List<String> candidateEntities = new ArrayList<>();
+        DataConfigHandler.getInstance().findEntitiesOfRelation(candidateEntities, relationToSearchIn);
+
+        // A relationship has many entites. Of them, find which ones we were looking.
+        List<DataEntityStructure> entityDetailsToSelect = new ArrayList<>();
+        candidateEntities.forEach((e) -> {
+            DataEntityStructure entityDetails = DataConfigHandler.getInstance().getEntityDetails(e);
+            if (entityDetails == null) {
+                return;
+            }
+
+            List<DataKeyStructure> intersectedKeys = entityDetails.getKeys()
+                    .stream()
+                    .filter((k) -> userSelectedKeys.contains(k.getKeyAlias())).collect(Collectors.toList());
+
+            if (CollectionUtils.isNotEmpty(intersectedKeys)) {
+                entityDetailsToSelect.add(new DataEntityStructure(
+                        entityDetails.getEntityNameAlias(), entityDetails.getEntityNameActual(), intersectedKeys
+                ));
+            } else {
+                if (userSelectedEntities.contains(entityDetails.getEntityNameAlias())) {
+                    entityDetailsToSelect.add(entityDetails);
+                }
+            }
+        });
+
+        if (CollectionUtils.isEmpty(entityDetailsToSelect)) {
+            // This will be logical bug.
             return EMPTY_RESPONSE;
         }
 
-        List<String> selectingColumnNames = determineColumnsNamesToSelect(selectItemsForColumns, aTableName);
-
         return new Query2SQLResponse(
-                " SELECT " + StringUtils.join(selectingColumnNames, ", ") +
-                        " FROM tm." + aTableName +
-                        " LIMIT 20"
+                " SELECT " + getSelectSpec(entityDetailsToSelect) +
+                        " FROM " + relationToSearchIn.getFromSpec()
         );
     }
 
-    private String determineTableNameToSelect(Set<String> selectItemsForColumns, Set<String> selectItemsForTable) {
-        // Gather all table names for the searching column names.
-        Set<String> lookupTableNames = new HashSet();
-        selectItemsForColumns.forEach((e) -> lookupTableNames.addAll(Query2SQLTokenHandler.getInstance().getTableNames(e)));
-
-        // Find those table names that we can find (from column name) and that user specified.
-        if (CollectionUtils.isEmpty(selectItemsForTable)) {
-            if (CollectionUtils.isNotEmpty(lookupTableNames)) {
-                return lookupTableNames.iterator().next();
-            }
-
-            return null;
-        }
-
-        if (CollectionUtils.isNotEmpty(lookupTableNames)) {
-            List<String> intersectedTables = selectItemsForTable.stream().filter(lookupTableNames::contains).collect(Collectors.toList());
-            if (CollectionUtils.isNotEmpty(intersectedTables)) {
-                return intersectedTables.get(0);
-            }
-        }
-
-        return selectItemsForTable.iterator().next();
+    private String getSelectSpec(List<DataEntityStructure> entityDetailsToSelect) {
+        return entityDetailsToSelect
+                .stream()
+                .map((e) -> e.getKeys().stream().map((k) -> getColumnSelect(e, k)).collect(Collectors.joining(", ")))
+                .collect(Collectors.joining(", "));
     }
 
-    private List<String> determineColumnsNamesToSelect(Set<String> selectItemsForColumns, String aTableName) {
-        List<String> allColumnNames = Query2SQLTokenHandler.getInstance().getColumnNames(aTableName);
+    private String getColumnSelect(DataEntityStructure e, DataKeyStructure k) {
+        return e.getEntityNameActual() + "." + k.getKeyActual();
+    }
 
-        if (CollectionUtils.isNotEmpty(selectItemsForColumns)) {
-            List<String> intersectedColumns = allColumnNames
-                    .stream()
-                    .filter(selectItemsForColumns::contains)
-                    .collect(Collectors.toList());
-            if (CollectionUtils.isNotEmpty(intersectedColumns)) {
-                return intersectedColumns;
+    private DataEntityRelation getRelationToSearchIn(List<String> entitiesStore) {
+        return DataConfigHandler.getInstance().getEntityRelationships()
+                .stream()
+                .map((r) -> getRelationshipMatchCount(r, entitiesStore))
+                .max((c1, c2) -> c1.matchedNodeCount == c2.matchedNodeCount ? c2.totalNodeCount - c1.totalNodeCount : c1.matchedNodeCount - c2.matchedNodeCount)
+                .get()
+                .relation;
+    }
+
+    private RelationshipMatchCount getRelationshipMatchCount(DataEntityRelation relation, List<String> entitiesStore) {
+        RelationshipMatchCount count = new RelationshipMatchCount(relation);
+        entitiesStore.forEach((e) -> {
+            if (DataConfigHandler.getInstance().isEntityExistsInRelation(e, relation)) {
+                count.incMatchedNodeCount();
             }
+        });
+        return count;
+    }
+
+    private class RelationshipMatchCount {
+        private DataEntityRelation relation;
+        private int matchedNodeCount;
+        private int totalNodeCount;
+
+        public RelationshipMatchCount(DataEntityRelation relation) {
+            this.relation = relation;
+            this.totalNodeCount = relation.getNodeCount();
+            this.matchedNodeCount = 0;
         }
 
-        return allColumnNames;
+        public void incMatchedNodeCount() {
+            this.matchedNodeCount++;
+        }
     }
 }

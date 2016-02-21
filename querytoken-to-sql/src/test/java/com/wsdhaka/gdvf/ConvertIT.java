@@ -27,11 +27,25 @@ public class ConvertIT extends BaseIT {
 
     @Test
     public void testOk() throws IOException {
-        testQueryToSQL("{\"text\": \"location\"}", "SELECT name FROM tm.location LIMIT 20");
-        testQueryToSQL("{\"text\": \"location\", \"something\": \"else\"}", "SELECT name FROM tm.location LIMIT 20");
-        testQueryToSQL("{\"text\": \"tell me name\" }", "SELECT name FROM tm.profession LIMIT 20");
-        testQueryToSQL("{\"text\": \"what is the tour schedule\" }", "SELECT startTime, endTime, costPerPerson FROM tm.tour LIMIT 20");
-        testQueryToSQL("{\"text\": \"what is the tour cost\" }", "SELECT startTime, endTime, costPerPerson FROM tm.tour LIMIT 20");
+        testQueryToSQL("{\"text\": \"tour traveller\"}", "SELECT tour.startTime, tour.endTime, tour.costPerPerson, traveller.name, traveller.gender, traveller.age" +
+                        " FROM tm.tourtraveller tourtraveller" +
+                        " INNER JOIN tm.tour tour ON (tourtraveller.tourId = tour.tourId)" +
+                        " INNER JOIN tm.employee employee ON (tour.planOwnerId = employee.employeeId)" +
+                        " INNER JOIN tm.traveller traveller ON (tourtraveller.travellerId = traveller.travellerId)" +
+                        " INNER JOIN tm.profession profession ON (traveller.professionId = profession.professionId)"
+        );
+
+        testQueryToSQL("{\"text\": \"traveller profession\"}", "SELECT traveller.name, traveller.gender, traveller.age, profession.name" +
+                        " FROM tm.traveller traveller" +
+                        " INNER JOIN tm.profession profession ON (traveller.professionId = profession.professionId)"
+        );
+
+        testQueryToSQL("{\"text\": \"location\"}", "SELECT location.name FROM tm.location location");
+        testQueryToSQL("{\"text\": \"location\", \"something\": \"else\"}", "SELECT location.name FROM tm.location location");
+        testQueryToSQL("{\"text\": \"tell me name\" }", "SELECT traveller.name FROM tm.traveller traveller");
+        //testQueryToSQL("{\"text\": \"what is the tour schedule\" }", "SELECT tour.startTime, tour.endTime, tour.costPerPerson FROM tm.tour tour");
+        testQueryToSQL("{\"text\": \"what is the tour cost\" }", "SELECT tour.costPerPerson FROM tm.tour tour");
+        testQueryToSQL("{\"text\": \"what is the cost\" }", "SELECT tour.costPerPerson FROM tm.tour tour");
     }
 
     @Test
