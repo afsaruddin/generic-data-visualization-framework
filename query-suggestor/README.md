@@ -5,11 +5,8 @@ For publishing the suggestions, it will have 2 way WebSocket communications.
 # Dependencies
 Python 2.7.9
 
-Natural Language Toolkit http://www.nltk.org/install.html
-
-`sudo pip install -U nltk`
-
-`python -m nltk.downloader all`
+NumPy
+`apt-get install build-essential python-dev`
 
 Tornado
 `pip install tornado`

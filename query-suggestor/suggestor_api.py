@@ -1,6 +1,4 @@
-# Entry point of `query-suggestor` module. Creates a socket connection to listen
-# for user given natural language query. `Tornado` (a Python web framework) is used to 
-# manage the websocket communtication.
+""" QuerySuggestor API """
 
 from tornado import websocket, web, ioloop
 from query_suggestor import QuerySuggestor
@@ -23,6 +21,7 @@ qs = QuerySuggestor(db_schema)
 # List to hold the connected clients
 clients = []
 
+# Handler for `/ws` endpoint
 class SocketHandler(websocket.WebSocketHandler):
     # To accept all cross-origin traffic
     def check_origin(self, origin):
@@ -45,6 +44,7 @@ class SocketHandler(websocket.WebSocketHandler):
             clients.remove(self)
         print 'Connection closed.'
 
+#Handler for `/pushhistory` endpoint
 class PushHistoryHandler(web.RequestHandler):
     def set_default_headers(self):
         self.set_header("Access-Control-Allow-Origin", "*")
@@ -58,7 +58,7 @@ class PushHistoryHandler(web.RequestHandler):
             client.write_message(history)
         self.write({"success": "true"})
 
-# Open the socket connection on `/ws` route
+# Expose endpoints for websocket communication and pushing history to clients on `/ws` and `/pushhistory` route
 application = web.Application([
     (r'/ws', SocketHandler),
     (r'/pushhistory', PushHistoryHandler)
