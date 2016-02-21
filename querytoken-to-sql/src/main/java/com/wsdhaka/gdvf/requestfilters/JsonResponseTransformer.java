@@ -1,4 +1,4 @@
-package com.wsdhaka.gdvf;
+package com.wsdhaka.gdvf.requestfilters;
 
 import com.wsdhaka.gdvf.utils.JSONUtils;
 import spark.ResponseTransformer;
