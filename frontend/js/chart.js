@@ -60,7 +60,7 @@ function createBarChart(data) {
 }
 
 function initKeyValue(data) {
-  console.log('datanfdknknkn: ' , data);
+  key = "" , value = "";
   for (var _key in data) {
     if (typeof data[_key] === 'number') {
       value = _key;
@@ -363,8 +363,13 @@ function createConceptMapChart(data){
 
 function createTable(data) {
 
-    $(".tableData").text("");
-    if (data.length >=2 ) $("#totalRows").text("ROWS " + data.length);
+    $(".tableData").empty();
+    $('#totalRows').empty();
+    $('.loader').css('display', 'none');
+
+    if (data.length >=2 ) {
+      $("#totalRows").text("Records found: " + data.length);
+    }
     else {
       $("#totalRows").text("No records found for query!");
       return;
@@ -372,7 +377,7 @@ function createTable(data) {
     var columns = [];
     for (var key in data[0]) columns.push(key);
 
-    var table = d3.select('.tableData').append('table').attr("class" , "table table-hover")
+    var table = d3.select('.tableData').append('table').attr("class" , "table table-striped table-bordered table-hover")
     var thead = table.append('thead')
     var	tbody = table.append('tbody');
 
@@ -380,7 +385,7 @@ function createTable(data) {
   	.selectAll('th')
   	.data(columns).enter()
   	.append('th')
-  	.text(function (column) { return column; });
+  	.text(function (column) { return column.toUpperCase(); });
 
     var rows = tbody.selectAll('tr')
       .data(data)

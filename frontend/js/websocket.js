@@ -75,6 +75,9 @@
               // Set the next input's value to the "value" of the item.
               $(this).next("#searchBox").val(ui.item.value);
               event.preventDefault();
+              $(".tableData").empty();
+              $('#totalRows').empty();
+              $('.loader').css('display', 'block');
               sendPostRequest(ui.item.object);
           }
       });
