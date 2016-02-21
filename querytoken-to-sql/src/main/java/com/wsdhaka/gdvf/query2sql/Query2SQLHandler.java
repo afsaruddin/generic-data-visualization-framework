@@ -9,7 +9,6 @@ import spark.Request;
 import spark.Response;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -68,29 +67,33 @@ public class Query2SQLHandler {
             if (CollectionUtils.isNotEmpty(lookupTableNames)) {
                 return lookupTableNames.iterator().next();
             }
-        } else {
-            if (CollectionUtils.isNotEmpty(lookupTableNames)) {
-                List<String> intersectedTables = selectItemsForTable.stream().filter(lookupTableNames::contains).collect(Collectors.toList());
-                if (CollectionUtils.isNotEmpty(intersectedTables)) {
-                    return intersectedTables.get(0);
-                }
-            } else {
-                return selectItemsForTable.iterator().next();
+
+            return null;
+        }
+
+        if (CollectionUtils.isNotEmpty(lookupTableNames)) {
+            List<String> intersectedTables = selectItemsForTable.stream().filter(lookupTableNames::contains).collect(Collectors.toList());
+            if (CollectionUtils.isNotEmpty(intersectedTables)) {
+                return intersectedTables.get(0);
             }
         }
 
-        return null;
+        return selectItemsForTable.iterator().next();
     }
 
     private List<String> determineColumnsNamesToSelect(Set<String> selectItemsForColumns, String aTableName) {
         List<String> allColumnNames = Query2SQLTokenHandler.getInstance().getColumnNames(aTableName);
-        if (CollectionUtils.isEmpty(selectItemsForColumns)) {
-            return allColumnNames;
+
+        if (CollectionUtils.isNotEmpty(selectItemsForColumns)) {
+            List<String> intersectedColumns = allColumnNames
+                    .stream()
+                    .filter(selectItemsForColumns::contains)
+                    .collect(Collectors.toList());
+            if (CollectionUtils.isNotEmpty(intersectedColumns)) {
+                return intersectedColumns;
+            }
         }
 
-        return allColumnNames
-                .stream()
-                .filter(selectItemsForColumns::contains)
-                .collect(Collectors.toList());
+        return allColumnNames;
     }
 }
