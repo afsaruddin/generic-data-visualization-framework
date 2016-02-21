@@ -3,7 +3,6 @@
 import nltk
 import numpy as np
 from nltk.tag import pos_tag
-from gensim.models import Word2Vec
 from nltk.corpus import wordnet as wn
 
 class QueryTokenizer:
@@ -35,13 +34,20 @@ class QueryTokenizer:
         self.keywords += list(self.db_schema)
         self.keywords = sorted(np.unique(self.keywords).tolist())
         
-        self.word_predictor = Word2Vec(self.keywords)
-        
-    #def get_max_similar_word(self, w1, w2, sim=wn.path_similarity):
-    #    syn_set1 = wn.synsets(w1)
-    #    syn_set2 = wn.synsets(w2)
-    #    
-    #    return (score, word) for 
+    def get_most_similar_word(self, w1, w2, sim=wn.path_similarity):
+        syn_sets1 = wn.synsets(w1)
+        syn_sets2 = wn.synsets(w2)
+        max_score = -1.0;
+        target_word = w1
+        for syn_set1 in syn_sets1:
+            for syn_set2 in syn_sets2:
+                score = sim(syn_set1, syn_set2)
+                if score > max_score:
+                    max_score = score
+                    target_word = w2
+         
+         
+        return (target_word, max_score)
                     
     # Get final suggestion query with selected tokens needed to build SQL             
     def get_final_query_with_tokens(self, query):
@@ -58,7 +64,8 @@ class QueryTokenizer:
         words = pos_tag(nltk.word_tokenize(query))
         result['select'] = [word for word,pos in words if pos.startswith('NN')]
         for token in result['select']:
-            print self.word_predictor.most_similar(token)
+            for keyword in self.keywords:
+                print self.get_most_similar_word(token, keyword)
         result['query'] = query
         
         # return query and required tokens
