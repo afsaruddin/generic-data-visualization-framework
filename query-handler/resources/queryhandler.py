@@ -4,8 +4,6 @@ from flask_restful import abort, Resource
 from controller.querycontroller import QueryHandlerController
 from controller.queryhistorycontroller import QueryHistoryController
 
-
-
 class QueryHandler(Resource):
 
     def __init__(self):
@@ -40,5 +38,6 @@ class QueryHandler(Resource):
 
     def get(self):
         abort(501, message="Operation not supported")
+
     def option(self):
         pass
