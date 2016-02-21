@@ -1,8 +1,5 @@
 package com.wsdhaka.gdvf;
 
-import spark.Filter;
-import spark.Request;
-import spark.Response;
 import spark.Spark;
 
 import java.util.HashMap;
@@ -19,13 +16,10 @@ public final class CORSFilter {
     }
 
     public final static void apply() {
-        Spark.after(new Filter() {
-            @Override
-            public void handle(Request request, Response response) throws Exception {
-                corsHeaders.forEach((key, value) -> {
-                    response.header(key, value);
-                });
-            }
+        Spark.after((request, response) -> {
+            corsHeaders.forEach((key, value) -> {
+                response.header(key, value);
+            });
         });
     }
 }

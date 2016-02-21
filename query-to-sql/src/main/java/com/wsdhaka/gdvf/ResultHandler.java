@@ -1,4 +1,4 @@
-package com.wsdhaka.gdvf.query2sql;
+package com.wsdhaka.gdvf;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
@@ -8,8 +8,6 @@ import spark.Response;
 @Deprecated
 public class ResultHandler {
     public String getDummyDataForResult(Request req, Response res) {
-        res.header("Content-Type", "application/json");
-
         String q = req.params("q");
         if (StringUtils.isNotEmpty(q)) {
             new JSONObject(q).getJSONArray("select");
