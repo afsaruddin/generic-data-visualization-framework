@@ -17,7 +17,7 @@ public class Query2SQLHandler {
     }
 
     protected Query2SQLResponse convert(Query2SQLRequest q) {
-        if (q == null) {
+        if (q == null || CollectionUtils.isEmpty(q.getSelect())) {
             throw new IllegalArgumentException("API request structure violated. Please contact the API.");
         }
 
