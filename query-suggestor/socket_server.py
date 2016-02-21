@@ -7,7 +7,17 @@ from query_suggestor import QuerySuggestor
 import json
 from StringIO import StringIO
 
-qs = QuerySuggestor()
+db_schema = {
+                'profession': ['name'],
+                'location': ['name'],
+                'traveller': ['name', 'gender', 'age', 'employee'],
+                'employee': ['name', 'gender', 'age'],
+                'tour': ['start', 'end', 'cost', 'employee'],
+                'tourpath': ['start', 'end', 'tour', 'location'],
+                'tourtraveller': ['tour', 'traveller'],
+                'feedback':['tour', 'traveller']
+            };
+qs = QuerySuggestor(db_schema)
 
 clients = []
 

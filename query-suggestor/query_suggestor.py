@@ -1,9 +1,7 @@
 """ Query suggestor """
 
-# Authors: Akiz Uddin Ahmed <shawpan.du@gmail.com>
-#          Abdul Mukit <mukit.sust027@gmail.com>
-
 import nltk
+import numpy as np
 from nltk.tag import pos_tag
 
 class QuerySuggestor:
@@ -13,9 +11,41 @@ class QuerySuggestor:
     """
     
     # Initialization 
-    def __init__(self):
-        pass
+    def __init__(self, db_schema=None):
+        if db_schema is None:
+            self.db_schema = {
+                'profession': ['name'],
+                'location': ['name'],
+                'traveller': ['name', 'gender', 'age', 'employee'],
+                'employee': ['name', 'gender', 'age'],
+                'tour': ['start', 'end', 'cost', 'employee'],
+                'tourpath': ['start', 'end', 'tour', 'location'],
+                'tourtraveller': ['tour', 'traveller'],
+                'feedback':['tour', 'traveller']
+            };
+        else:
+            self.db_schema = db_schema
+        self.keywords = [item for key in list(self.db_schema) for item in self.db_schema[key]]
+        self.keywords += list(self.db_schema)
+        self.keywords = np.unique(self.keywords).tolist()
+        
+    def sort(self, items):
+        return np.sort(items).tolist()
     
+    # Get next query suggestions based on db schema   
+    def get_suggestions_from_schema(self, query):
+        last_word = nltk.word_tokenize(query)[-1]
+        query_wo_lastword = ' '.join(nltk.word_tokenize(query)[:-1])
+
+        if (last_word in self.db_schema):
+            return [query + ' ' + next_word for next_word in self.sort(self.db_schema[last_word])]
+        if (any(item.startswith(last_word) for item in self.keywords)) :
+            entities = [item for item in self.keywords if item.startswith(last_word)]
+            
+            return [query_wo_lastword + ' ' + next_word for next_word in self.sort(entities)]
+            
+        return [query + ' ' + next_word for next_word in self.sort(list(self.db_schema.keys()))]
+            
     def extract_entities(self, text):
         for sent in nltk.sent_tokenize(text):
             for chunk in nltk.ne_chunk(nltk.pos_tag(nltk.word_tokenize(sent))):
@@ -50,6 +80,6 @@ class QuerySuggestor:
         
         
 #qs = QuerySuggestor()
-#inputs = ['which locations are covered?', 'what type of persons travels ?', 'who are travelling ?', 'what is the tour schedule ?', 'what is the cost for a tour?']
+#inputs = ['which traveller', 'what type of persons travels ?', 'who are travelling ?', 'what is the tour schedule ?', 'what is the cost for a tour?']
 #for q in inputs:
-#    print qs.get_suggestions(q)
+#    print qs.get_suggestions_from_schema(q)
