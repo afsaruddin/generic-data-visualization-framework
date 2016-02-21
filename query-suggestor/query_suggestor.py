@@ -25,26 +25,30 @@ class QuerySuggestor:
             };
         else:
             self.db_schema = db_schema
+            
+        for key in self.db_schema:
+            self.db_schema[key] = self.sort(self.db_schema[key]);
+            
         self.keywords = [item for key in list(self.db_schema) for item in self.db_schema[key]]
         self.keywords += list(self.db_schema)
-        self.keywords = np.unique(self.keywords).tolist()
+        self.keywords = self.sort(np.unique(self.keywords).tolist())
         
     def sort(self, items):
         return np.sort(items).tolist()
     
     # Get next query suggestions based on db schema   
     def get_suggestions_from_schema(self, query):
-        last_word = nltk.word_tokenize(query)[-1]
-        query_wo_lastword = ' '.join(nltk.word_tokenize(query)[:-1])
+        last_word = query.split()[-1]
+        query_wo_lastword = ' '.join(query.split()[:-1])
 
         if (last_word in self.db_schema):
-            return [query + ' ' + next_word for next_word in self.sort(self.db_schema[last_word])]
+            return [query + ' ' + next_word for next_word in self.db_schema[last_word]]
         if (any(item.startswith(last_word) for item in self.keywords)) :
             entities = [item for item in self.keywords if item.startswith(last_word)]
             
-            return [query_wo_lastword + ' ' + next_word for next_word in self.sort(entities)]
+            return [query_wo_lastword + ' ' + next_word for next_word in entities]
             
-        return [query + ' ' + next_word for next_word in self.sort(list(self.db_schema.keys()))]
+        return [query + ' ' + next_word for next_word in list(self.db_schema.keys())]
             
     def extract_entities(self, text):
         for sent in nltk.sent_tokenize(text):
@@ -52,10 +56,9 @@ class QuerySuggestor:
                 if hasattr(chunk, 'node'):
                     print chunk.node, ' '.join(c[0] for c in chunk.leaves())
                     
-                    
-    # Get structured query suggestions given user query
-    def get_suggestions(self, query):
-        """ Get query suggestions 
+    # Get final suggestion query with selected tokens needed to build SQL             
+    def get_final_query(self, query):
+        """ Get final query with keywords selected and processed 
         
             Parameters
             ----------
@@ -68,18 +71,34 @@ class QuerySuggestor:
         suggestion_text = {};
         words = pos_tag(nltk.word_tokenize(query))
         suggestion_text['select'] = [word for word,pos in words if pos.startswith('NN')]
-        suggestion_text['text'] = 'show ' + ' '.join([word for word,pos in words 
-                                                            if pos.startswith('NN') 
-                                                                or pos == 'IN'
-                                                                or pos == 'DT'
-                                                                or pos == 'CC'])
+        suggestion_text['text'] = query
         result['suggestions'] = [suggestion_text]
         
         # return suggestions and required tokens
         return result
+                    
+    # Get query suggestions given user query
+    def get_suggestions(self, query):
+        """ Get query suggestions 
+        
+            Parameters
+            ----------
+            
+            query : string, mandatory
+                The initial query 
+        """
+        
+        result = {'suggestions': []};
+        suggestions_on_db_schema = self.get_suggestions_from_schema(query)
+        result['suggestions'] = [{
+            'text': text
+        } for text in suggestions_on_db_schema]
+        
+        # return suggestions
+        return result
         
         
-#qs = QuerySuggestor()
-#inputs = ['which traveller', 'what type of persons travels ?', 'who are travelling ?', 'what is the tour schedule ?', 'what is the cost for a tour?']
-#for q in inputs:
-#    print qs.get_suggestions_from_schema(q)
+qs = QuerySuggestor()
+inputs = ['which traveller', 'what type of persons travels ?', 'who are travelling ?', 'what is the tour schedule ?', 'what is the cost for a tour?']
+for q in inputs:
+    print qs.get_suggestions(q)
