@@ -1,11 +1,10 @@
-from flask_restful import abort, Resource, reqparse
-
+from flask import jsonify, request
+from flask_restful import abort, Resource
 
 from controller.querycontroller import QueryHandlerController
 from controller.queryhistorycontroller import QueryHistoryController
-import pprint
 
-from flask import Flask, jsonify, request
+
 
 class QueryHandler(Resource):
 
@@ -21,8 +20,6 @@ class QueryHandler(Resource):
         if (len(json_data)< 1):
             abort(501, message="not enough data provided")
 
-        #print(json_data['text'])
-
         processed_query = self.query_handler_cnt.process_query( json_data)
 
         if processed_query['success'] == True:
@@ -30,7 +27,7 @@ class QueryHandler(Resource):
             query_data = self.query_handler_cnt.execute_query(processed_query['data']['sql'])
             self.query_history_cnt.publish_history(json_data['text'])
 
-            return jsonify( query_data)
+            return jsonify(query_data)
         else:
             return jsonify({'success': False})
 
