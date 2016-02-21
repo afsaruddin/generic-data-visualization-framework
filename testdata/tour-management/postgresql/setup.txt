@@ -2,11 +2,11 @@ DB Creation:
 ~~~~~~~~~~~~
 $ apt-get install postgresql postgresql-client
 $ sudo -u postgres psql postgres
-   # \password postgres                                           [ Setting root passord ]
+   # \password postgres                               [ Setting root passord ]
    # \q
 
 $ sudo -u postgres createuser -P gdvf_user            [ Create new user, password (say, gdvf_PASS) ]
-$ sudo -u postgres createdb gvdf                            [ Create new DB ]
+$ sudo -u postgres createdb gdvf                      [ Create new DB ]
 $ psql -h localhost -U postgres -d gdvf
   # CREATE SCHEMA tm AUTHORIZATION gdvf_user;
   # \q

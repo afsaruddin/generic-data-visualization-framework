@@ -1,0 +1,12 @@
+# Maven stuffs
+bin/
+target/
+
+# Eclipse stuffs
+.classpath
+.project
+.settings
+
+# IntelliJ stuffs.
+.idea
+*.iml
