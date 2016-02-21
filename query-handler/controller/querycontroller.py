@@ -27,11 +27,12 @@ class QueryHandlerController:
     def execute_query(self, sql_query):
 
         query_data = DbUtil.execute_query(sql_query)
-        processed_datas = []
 
 
-        if len(query_data) > 0:
+        if query_data['success'] == True:
+            processed_datas = []
 
+            # TODO : Have write this code in Lamda
             i =0
             for x in query_data['data']:
                 j=0
