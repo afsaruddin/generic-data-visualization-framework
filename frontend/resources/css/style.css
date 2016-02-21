@@ -15,3 +15,44 @@ html body {
   text-align: center;
   font-family: 'Bree Serif', serif;
 }
+
+.loader {
+  text-align: center;
+  margin: 25px 0;
+  display: none;
+}
+
+.other-charts {
+  display: none;
+  margin-top: 15px;
+}
+
+.other-charts > a {
+  margin-left: 10px;
+}
+
+.table-wrapper {
+  padding: 0;
+  margin-top: 15px;
+  color: #434343;
+}
+
+.table .table-striped th {
+    font-weight: 700!important;
+}
+
+.table thead {
+  background-color: #F2F0F0!important;
+  height: 40px!important;
+}
+
+.table thead th {
+    padding: 7px 12px!important;
+    border-bottom: none!important;
+    border-top: 1px solid #BFBFBF!important;
+    font-size: 16px !important;
+}
+
+.table tbody tr:hover {
+  background-color: lightcyan !important;
+}
