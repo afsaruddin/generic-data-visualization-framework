@@ -1,6 +1,10 @@
 package com.wsdhaka.gdvf;
 
 import com.wsdhaka.gdvf.query2sql.Query2SQLHandler;
+import com.wsdhaka.gdvf.requestfilters.CORSFilter;
+import com.wsdhaka.gdvf.requestfilters.JsonResponseFilter;
+import com.wsdhaka.gdvf.requestfilters.JsonResponseTransformer;
+import com.wsdhaka.gdvf.requestfilters.RequestDebugFilter;
 import org.apache.http.HttpStatus;
 import spark.Spark;
 
@@ -11,7 +15,6 @@ public class Main {
         JsonResponseFilter.apply();
 
         Spark.post("/querytosql", "application/json", (req, res) -> new Query2SQLHandler().doGet(req, res), new JsonResponseTransformer());
-        Spark.post("/submitquery", "application/json", (req, res) -> new ResultHandler().getDummyDataForResult(req, res));
 
         Spark.exception(IllegalArgumentException.class, (e, request, response) -> {
             response.status(HttpStatus.SC_BAD_REQUEST);
