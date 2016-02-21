@@ -16,6 +16,7 @@
 </head>
 <body>
   <div id="page-wrapper">
+    <div class="tooltip"></div>
     <div class="content">
       <div class="row">
         <div class="col-md-12">
@@ -24,25 +25,28 @@
       </div>
 
         <div class="row" id="search">
-            <div class="col-md-12">
-            <div class="input-group">
-              <input type="text" id="searchBox" class="form-control" placeholder="Search for...">
-              <span class="input-group-btn">
-                <button class="btn btn-primary" type="button" id="go">Go!</button>
-              </span>
-            </div>
+            <div style="width: calc(100% - 40px); float:left;">
+              <div class="input-group">
+                <input type="text" id="searchBox" class="form-control" placeholder="Search for...">
+                <span class="input-group-btn">
+                  <button class="btn btn-primary" type="button" id="go">Go!</button>
+                </span>
+              </div>
+          </div>
+          <div>
+            <span class="recent-query-icon" title="Recent Queries"><i class="fa fa-users fa-2x"></i></span>
           </div>
         </div>
 
         <div class="row loader">
           <div class="col-md-12">
-            <span <i class="fa fa-spinner fa-pulse fa-3x"></i></span>
+            <span><i class="fa fa-spinner fa-pulse fa-3x"></i></span>
           </div>
         </div>
 
-        <div class="row">
+        <div class="row other-charts">
           <div class="col-md-12">
-            <div class="other-charts pull-right">
+            <div class="pull-right">
               <a href="javascript:void(0);" title="Bar Chart" id="barChart"><i class="fa fa-bar-chart fa-2x"></i></a>
               <a href="javascript:void(0);" title="Donut Chart" id="donutChart"><i class="fa fa-circle-o-notch fa-2x"></i></a>
               <a href="javascript:void(0);" title="Pie Chart" id="pieChart"><i class="fa fa-pie-chart fa-2x"></i></a>
@@ -65,15 +69,15 @@
 
   </div>
 
-  <script src="js/websocket.js"></script>
   <script src="js/chart.js"></script>
+  <script src="js/hiscom.js"></script>
+  <script src="js/websocket.js"></script>
   <script>
     $(function() {
 
       var populateData = function () {
         $('.loader').css('display', 'block');
-        $(".tableData").empty();
-        $('#totalRows').empty();
+        resetUI();
         sendPostRequest();
       };
 

@@ -1,10 +1,41 @@
 var key = "" , value = "";
+var getTooltipHTML = function (value) {
+  console.log(value);
+  var tooltipHTML = '<table><tr><td>' + value + '</td></tr></table>';
+
+  return tooltipHTML;
+};
+
+$('.recent-query-icon').click(function () {
+  if ($('.recent-query').is(':visible')) {
+   $('#page-wrapper').css('margin', '0 auto');
+   $('.recent-query').css('display', 'none');
+  } else {
+   $('#page-wrapper').css('margin-left', '30px');
+   $('.recent-query').css('display', 'block');
+  }
+
+});
+
+var resize = function () {
+  if (selectedChart === "bar") {
+    createBarChart(selectedChartData);
+  }
+  else if (selectedChart === "pie") {
+    createPieChart(chartData, true);
+  }
+  else if (selectedChart === "donut") {
+    createPieChart(chartData, false);
+  }
+};
+
+d3.select(window).on('resize', resize);
 
 function createBarChart(data) {
 
   d3.selectAll("svg").remove();
   if(!initKeyValue(data[0])) return;
-
+  selectedChartData = data;
   var margin = {top: 20, right: 20, bottom: 30, left: 40},
     width = $('#page-wrapper').width() - margin.left - margin.right,
     height = 320 - margin.top - margin.bottom;
@@ -17,12 +48,13 @@ function createBarChart(data) {
 
   var xAxis = d3.svg.axis()
       .scale(x)
+      .tickFormat(function (d ) { return d.substring(0,2); })
       .orient("bottom");
 
   var yAxis = d3.svg.axis()
       .scale(y)
       .orient("left")
-      .ticks(5 , "%");
+      .ticks(5);
 
   var svg = d3.select(".chart").append("svg")
       .attr("width", width + margin.left + margin.right)
@@ -40,13 +72,13 @@ function createBarChart(data) {
 
       svg.append("g")
           .attr("class", "y axis")
-          .call(yAxis)
-        .append("text")
-          .attr("transform", "rotate(-90)")
-          .attr("y", 6)
-          .attr("dy", ".71em")
-          .style("text-anchor", "end")
-          .text("Frequency");
+          .call(yAxis);
+        // .append("text")
+        //   .attr("transform", "rotate(-90)")
+        //   .attr("y", 6)
+        //   .attr("dy", ".71em")
+        //   .style("text-anchor", "end")
+        //   .text("Frequency");
 
       svg.selectAll(".bar")
           .data(data)
@@ -55,8 +87,22 @@ function createBarChart(data) {
           .attr("x", function(d) { return x(d[key]); })
           .attr("width", x.rangeBand())
           .attr("y", function(d) { return y(d[value]); })
-          .attr("height", function(d) { return height - y(d[value]); });
-
+          .attr("height", function(d) { return height - y(d[value]); })
+          .on('mouseover', function (d) {
+          d3.select('.tooltip').transition()
+             .duration(200)
+             .style('opacity', '1');
+              d3.select('.tooltip').html(
+                getTooltipHTML(d[key])
+              )
+              .style('left', (d3.event.pageX + 5) + 'px')
+              .style('top', (d3.event.pageY - 30) + 'px');
+         })
+        .on('mouseout', function (d) {
+          d3.select('.tooltip').transition()
+            .duration(500)
+            .style('opacity', '0');
+        });
 }
 
 function initKeyValue(data) {
@@ -68,9 +114,20 @@ function initKeyValue(data) {
     else if (typeof data[_key] === 'string' ) {
       key = _key;
     }
-    if (key && value) return true;
+    if (key && value) {
+      $('.other-charts').css('display', 'block');
+      return true;
+    }
   }
+  $('.other-charts').css('display', 'none');
   return false;
+}
+
+function resetUI() {
+  $(".tableData").empty();
+  $('#totalRows').empty();
+  $('.other-charts').css('display', 'none');
+  d3.selectAll("svg").remove();
 }
 
 function getRandomArbitrary(min, max) {
@@ -78,6 +135,7 @@ function getRandomArbitrary(min, max) {
 }
 
 function createPieChart(data, isPieChart) {
+
   d3.selectAll("svg").remove();
   if(!initKeyValue(data[0])) return;
   var width = $('#page-wrapper').width(),
@@ -110,7 +168,22 @@ function createPieChart(data, isPieChart) {
   var g = svg.selectAll(".arc")
         .data(pie(data))
         .enter().append("g")
-        .attr("class", "arc");
+        .attr("class", "arc")
+        .on('mouseover', function (d) {
+        d3.select('.tooltip').transition()
+           .duration(200)
+           .style('opacity', '1');
+            d3.select('.tooltip').html(
+              getTooltipHTML(d.data[value])
+            )
+            .style('left', (d3.event.pageX + 5) + 'px')
+            .style('top', (d3.event.pageY - 30) + 'px');
+       })
+      .on('mouseout', function (d) {
+        d3.select('.tooltip').transition()
+          .duration(500)
+          .style('opacity', '0');
+      });
 
       g.append("path")
         .attr("d", arc)
