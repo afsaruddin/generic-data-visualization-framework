@@ -9,7 +9,7 @@ class QueryHandlerController:
     def __init__(self):
         pass
 
-    def process_query(self, category, query):
+    def process_query(self, query):
         ret_values = []
 
         #print ('process_query method is called')
