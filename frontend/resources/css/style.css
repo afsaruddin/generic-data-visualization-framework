@@ -1,0 +1,17 @@
+html body {
+  width: 100%;
+  background-color: #3498db
+}
+#page-wrapper {
+  width: 60%;
+  margin: 0 auto;
+}
+
+#page-wrapper .content {
+  margin-top: 80px;
+}
+
+#page-wrapper h1 {
+  text-align: center;
+  font-family: 'Bree Serif', serif;
+}
