@@ -1,5 +1,6 @@
 package com.wsdhaka.gdvf.utils;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpOptions;
@@ -10,20 +11,15 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 public class RESTUtils {
     public static String doGet(String theUrl) throws IOException {
         HttpGet aHttpGetReq = new HttpGet(theUrl);
 
         try (CloseableHttpClient aHttpClient = HttpClients.createDefault()) {
-            HttpResponse aHttpResponse = aHttpClient.execute(aHttpGetReq);
-
-            // We need the "200 OK".
-            if (aHttpResponse.getStatusLine().getStatusCode() != 200) {
-                throw new IOException(aHttpResponse.getStatusLine().toString());
-            }
-
-            return EntityUtils.toString(aHttpResponse.getEntity());
+            return getResponse(aHttpClient.execute(aHttpGetReq));
         }
     }
 
@@ -35,12 +31,7 @@ public class RESTUtils {
         aHttpPostReq.setEntity(anEntity);
 
         try (CloseableHttpClient aHttpClient = HttpClients.createDefault()) {
-            HttpResponse aHttpResponse = aHttpClient.execute(aHttpPostReq);
-            if (aHttpResponse.getStatusLine().getStatusCode() != 200) {
-                throw new IOException(aHttpResponse.getStatusLine().toString());
-            }
-
-            return EntityUtils.toString(aHttpResponse.getEntity());
+            return getResponse(aHttpClient.execute(aHttpPostReq));
         }
     }
 
@@ -54,6 +45,25 @@ public class RESTUtils {
             }
 
             return aHttpResponse;
+        }
+    }
+
+    private static String getResponse(HttpResponse aHttpResponse) throws IOException {
+        HttpEntity aHttpResponseEntity = aHttpResponse.getEntity();
+        String aStrResponse = aHttpResponseEntity != null ? EntityUtils.toString(aHttpResponseEntity) : null;
+
+        if (aHttpResponse.getStatusLine().getStatusCode() != 200) {
+            throw new IOException("Status: " + aHttpResponse.getStatusLine().toString() + ". Request body: " + aStrResponse);
+        }
+        return aStrResponse;
+    }
+
+    public static String encode(String str) {
+        try {
+            return URLEncoder.encode(str, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return "";
         }
     }
 }

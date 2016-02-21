@@ -27,11 +27,11 @@ public class ConvertIT extends BaseIT {
 
     @Test
     public void testOk() throws IOException {
-        testQueryToSQL("{\"text\": \"location\"}", "SELECT name FROM location");
-        testQueryToSQL("{\"text\": \"location\", \"something\": \"else\"}", "SELECT name FROM location");
-        testQueryToSQL("{\"text\": \"name\" }", "SELECT name FROM profession");
-        testQueryToSQL("{\"text\": \"tour schedule\" }", "SELECT startTime, endTime, costPerPerson FROM tour");
-        testQueryToSQL("{\"text\": \"tour cost\" }", "SELECT startTime, endTime, costPerPerson FROM tour");
+        testQueryToSQL("{\"text\": \"location\"}", "SELECT name FROM tm.location LIMIT 20");
+        testQueryToSQL("{\"text\": \"location\", \"something\": \"else\"}", "SELECT name FROM tm.location LIMIT 20");
+        testQueryToSQL("{\"text\": \"tell me name\" }", "SELECT name FROM tm.profession LIMIT 20");
+        testQueryToSQL("{\"text\": \"what is the tour schedule\" }", "SELECT startTime, endTime, costPerPerson FROM tm.tour LIMIT 20");
+        testQueryToSQL("{\"text\": \"what is the tour cost\" }", "SELECT startTime, endTime, costPerPerson FROM tm.tour LIMIT 20");
     }
 
     @Test
@@ -57,7 +57,7 @@ public class ConvertIT extends BaseIT {
     private void testQueryToSQL(String humanQuery, String expectedSQL) throws IOException {
         JSONObject response = new JSONObject(RESTUtils.doPost(HTTP_QUERY_TO_SQL_HOST + "/querytosql", humanQuery));
         Assert.assertNotNull(response);
-        Assert.assertEquals(expectedSQL, response.getString("sql"));
+        Assert.assertEquals(expectedSQL, response.getString("sql").trim());
     }
 
     private void testFailedFor400(String dataToSend) {
