@@ -1,4 +1,5 @@
 import requests
+import json
 
 
 class HttpUtil(object):
@@ -8,7 +9,10 @@ class HttpUtil(object):
 
         print(request_body)
 
-        post_request = requests.post(url, json=request_body)
+        # post_request = requests.post(url, json=request_body)
+
+        post_request=requests.post(url, data=json.dumps(request_body), headers={"content-type": "text/javascript"})
+
         print(post_request.status_code)
 
         if post_request.status_code == 200:

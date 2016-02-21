@@ -14,16 +14,16 @@ class QueryHandler(Resource):
         self.query_history_cnt = QueryHistoryController()
         pass
 
-    def post(self, category):
-
-        #print('All the code is done')
-        #print ('category is {} ').format(category)
+    def post(self):
 
         json_data = request.get_json(force=True)
 
+        if (len(json_data)< 1):
+            abort(501, message="not enough data provided")
+
         #print(json_data['text'])
 
-        processed_query = self.query_handler_cnt.process_query(category, json_data)
+        processed_query = self.query_handler_cnt.process_query( json_data)
 
         if processed_query['success'] == True:
 

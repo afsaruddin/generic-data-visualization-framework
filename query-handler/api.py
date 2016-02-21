@@ -8,7 +8,8 @@ api = Api(app)
 
 app.config.from_object('settings.configuemodule.DevelopmentConfig')
 
-api.add_resource(QueryHandler, '/queryhandler/<category>/')
+api.add_resource(QueryHandler, '/queryhandler/')
+
 
 if __name__ == '__main__':
     app.run(debug=True)
