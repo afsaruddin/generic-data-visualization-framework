@@ -26,7 +26,7 @@ class QuerySuggestor:
             self.db_schema = db_schema
             
         for key in self.db_schema:
-            self.db_schema[key] = self.sort(self.db_schema[key]);
+            self.db_schema[key] = sorted(self.db_schema[key]);
             
         self.keywords = [item for key in list(self.db_schema) for item in self.db_schema[key]]
         self.keywords += list(self.db_schema)
