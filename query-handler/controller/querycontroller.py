@@ -1,3 +1,8 @@
+from flask import current_app
+from util.httputil import  HttpUtil
+import pprint
+
+
 
 class QueryHandlerController:
     def __init__(self):
@@ -6,10 +11,15 @@ class QueryHandlerController:
     def process_query(self, category, query):
         ret_values = []
 
-        print ('Query handlers method is called')
-        # TODO : Prepare a hardCoded SQL for now
+        #print ('process_query method is called')
+        #print(query)
+        url = current_app.config.get('QUERY_PROCESSING_URL')
 
-        ret_values = {'status': 'success', 'sqlquery': 'Select * from tm.tour limit 20'}
+
+        pprint.pprint( HttpUtil.post_url( url ))
+
+        print ('Quries will be proceed soon')
+
 
         return ret_values
 
