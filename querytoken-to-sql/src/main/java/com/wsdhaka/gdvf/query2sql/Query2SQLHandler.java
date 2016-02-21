@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 public class Query2SQLHandler {
 
-    public static final Query2SQLResponse EMPTY_RESPONSE = new Query2SQLResponse(Collections.emptyList(), "");
+    public static final Query2SQLResponse EMPTY_RESPONSE = new Query2SQLResponse("");
 
     public Query2SQLResponse doGet(Request req, Response res) throws IOException {
         return convert(JSONUtils.fromJson(req.body(), Query2SQLRequest.class));
@@ -52,8 +52,9 @@ public class Query2SQLHandler {
         List<String> selectingColumnNames = determineColumnsNamesToSelect(selectItemsForColumns, aTableName);
 
         return new Query2SQLResponse(
-                selectingColumnNames,
-                "SELECT " + StringUtils.join(selectingColumnNames, ", ") + " FROM tm." + aTableName
+                " SELECT " + StringUtils.join(selectingColumnNames, ", ") +
+                        " FROM tm." + aTableName +
+                        " LIMIT 20"
         );
     }
 
