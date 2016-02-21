@@ -9,7 +9,6 @@
             <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
             <property name="javax.persistence.jdbc.user" value="test_username"/>
             <property name="javax.persistence.jdbc.password" value="test_password"/>
-            <property name="eclipselink.logging.level" value="ALL"/>
         </properties>
     </persistence-unit>
 </persistence>
