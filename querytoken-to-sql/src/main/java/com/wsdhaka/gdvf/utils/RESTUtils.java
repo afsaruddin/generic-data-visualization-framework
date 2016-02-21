@@ -2,6 +2,7 @@ package com.wsdhaka.gdvf.utils;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpOptions;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -40,6 +41,19 @@ public class RESTUtils {
             }
 
             return EntityUtils.toString(aHttpResponse.getEntity());
+        }
+    }
+
+    public static HttpResponse doOptions(String theUrl) throws IOException {
+        HttpOptions aHttpOptionsReq = new HttpOptions(theUrl);
+
+        try (CloseableHttpClient aHttpClient = HttpClients.createDefault()) {
+            HttpResponse aHttpResponse = aHttpClient.execute(aHttpOptionsReq);
+            if (aHttpResponse.getStatusLine().getStatusCode() != 200) {
+                throw new IOException(aHttpResponse.getStatusLine().toString());
+            }
+
+            return aHttpResponse;
         }
     }
 }
