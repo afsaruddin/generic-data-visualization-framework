@@ -39,7 +39,7 @@ public class Query2SQLHandler {
 
         List<String> selectingColumnNames = determineColumnsNamesToSelect(selectItemsForColumns, aTableName);
 
-        return new Query2SQLResponse("SELECT " + StringUtils.join(selectingColumnNames, ", ") + " FROM " + aTableName);
+        return new Query2SQLResponse("SELECT " + StringUtils.join(selectingColumnNames, ", ") + " FROM tm." + aTableName);
     }
 
     private String determineTableNameToSelect(Set<String> selectItemsForColumns, Set<String> selectItemsForTable) {
