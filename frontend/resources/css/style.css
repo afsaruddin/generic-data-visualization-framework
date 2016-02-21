@@ -1,9 +1,9 @@
 html body {
   width: 100%;
-  background-color: #3498db
+  /*background-color: #3498db*/
 }
 #page-wrapper {
-  width: 60%;
+  width: 80%;
   margin: 0 auto;
 }
 
