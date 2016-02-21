@@ -1,8 +1,6 @@
 from flask import current_app
 from util.httputil import  HttpUtil
 from util.dbutil import DbUtil
-import pprint
-import json
 
 
 class QueryHandlerController:
