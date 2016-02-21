@@ -23,12 +23,17 @@ class QueryHandler(Resource):
 
         #print(json_data['text'])
 
-        self.query_handler_cnt.process_query(category, json_data)
+        processed_query = self.query_handler_cnt.process_query(category, json_data)
 
-        # Will change this later
-        self.query_history_cnt.publish_history(json_data['text'])
+        if processed_query['success'] == True:
 
-        return 'test is done', 200
+            query_data = self.query_handler_cnt.execute_query(processed_query['data']['sql'])
+            self.query_history_cnt.publish_history(json_data['text'])
+
+            return jsonify( query_data)
+        else:
+            return jsonify({'success': False})
+
 
     def delete(self):
         abort(501, message="Operation not supported")
