@@ -6,7 +6,8 @@
     else {
       var suggestionsMapper = {};
       var webSocket;
-      var host = "ws://192.168.1.50:9090/ws";
+      var host = "ws://169.44.61.115:9090/ws";
+      // var host = "ws://192.168.1.50:9090/ws";
       var responseData = null;
       try {
           webSocket = new WebSocket(host);
@@ -19,7 +20,6 @@
             responseData = response.data;
             console.log('Server respond with: ' + responseData);
             initSuggestion(responseData);
-
           }
 
           webSocket.onclose = function() {
@@ -51,17 +51,73 @@
         if (typeof responseData !== 'undefined') {
            for (var i =0 ; i < responseData.suggestions.length; i++) {
              avaialableSuggestions.push(responseData.suggestions[i].text);
-             suggestionsMapper[avaialableSuggestions[i].toLowerCase()] = responseData.suggestions[i];
+             suggestionsMapper[avaialableSuggestions[i].toLowerCase().trim()] = responseData.suggestions[i];
            }
-           console.log("avaialableSuggestions: " , avaialableSuggestions);
-           $("#searchBox").autocomplete({
-               source: avaialableSuggestions
-           });
+          populateAutocompleteSuggestions(responseData.suggestions);
        }
       }
 
-     function getSuggestion(queryString){
-        if(suggestionsMapper.length && suggestionsMapper[queryString.toLowerCase()]) return suggestionsMapper[queryString.toLowerCase()];
-        else null; 
+    function populateAutocompleteSuggestions(data) {
+      $("#searchBox").autocomplete({
+          source: function (request, response) {
+            response($.map(data, function (el) {
+                return {
+                    label: el.text,
+                    value: el.text,
+                    object: el
+                };
+            }));
+          },
+          select: function (event, ui) {
+              // Prevent value from being put in the input:
+              this.value = ui.item.label;
+              console.log('value: ' , this.value);
+              // Set the next input's value to the "value" of the item.
+              $(this).next("#searchBox").val(ui.item.value);
+              event.preventDefault();
+              sendPostRequest(ui.item.object);
+          }
+      });
+    }
+
+    function sendPostRequest (suggestionObject) {
+      if (suggestionObject) {
+        suggestionObject = { "suggestionData" : suggestionObject };
+        console.log('suggestionObject: ' , suggestionObject );
+
+        $.ajax({
+          type: "POST",
+          url: "http://169.45.220.234:4567/submitquery",
+          contentType: "application/json",
+          data: JSON.stringify(suggestionObject),
+          success: function(responseData) {
+            if (responseData.data) {
+              drawChart(responseData.chartType, responseData.data);
+            }
+          },
+          error: function(err){
+            console.log('Callback Error: ' + err);
+          },
+          dataType: "json"
+        });
+
+        $("#searchBox").val("");
+      }
+    }
+
+    function drawChart(chartType, data){
+      if(chartType.toLowerCase().trim() == "pie") createPieChart(data, true);
+      else if(chartType.toLowerCase().trim() == "donut") createPieChart(data, false);
+      else if(chartType.toLowerCase().trim() == "bar") createBarChart(data);
+      else createTable(data);
+
+    }
+
+     function getSuggestionObject(queryString) {
+        var searchKey = queryString.toLowerCase().trim();
+        if(suggestionsMapper.length && suggestionsMapper[searchKey]) {
+          return suggestionsMapper[searchKey];
+        }
+        else null;
      }
   }

@@ -1,6 +1,6 @@
 html body {
   width: 100%;
-  background-color: #7FFFD4
+  background-color: #3498db
 }
 #page-wrapper {
   width: 60%;
@@ -13,4 +13,5 @@ html body {
 
 #page-wrapper h1 {
   text-align: center;
+  font-family: 'Bree Serif', serif;
 }

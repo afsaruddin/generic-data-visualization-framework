@@ -54,7 +54,6 @@ function createBarChart(data) {
 }
 
 function createPieChart(data, isPieChart) {
-
   var width = $('#page-wrapper').width(),
     height = 320,
     radius = Math.min(width, height) / 2;
