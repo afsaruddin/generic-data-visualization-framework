@@ -14,6 +14,7 @@ import spark.Response;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -55,21 +56,21 @@ public class Query2SQLHandler {
                 .collect(Collectors.toSet());
 
         // Find the entities (the bazar) where we can get the result for user's keys.
-        List<String> entitiesStore = userSelectedKeys
+        Set<String> entitiesStore = userSelectedKeys
                 .stream()
                 .filter((e) -> DataConfigHandler.getInstance().getStoreEntity(e) != null)
                 .map((e) -> DataConfigHandler.getInstance().getStoreEntity(e))
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
 
         // Add user's entities (if existent).
         entitiesStore.addAll(userSelectedEntities
                         .stream()
                         .filter((e) -> DataConfigHandler.getInstance().getStoreEntity(e) != null)
                         .map((e) -> DataConfigHandler.getInstance().getStoreEntity(e))
-                        .collect(Collectors.toList())
+                        .collect(Collectors.toSet())
         );
 
-        DataEntityRelation relationToSearchIn = getRelationToSearchIn(entitiesStore);
+        DataEntityRelation relationToSearchIn = getRelationToSearchIn(entitiesStore, meaningFulTokens);
 
         // Entities of the selected relationship.
         List<String> candidateEntities = new ArrayList<>();
@@ -103,9 +104,13 @@ public class Query2SQLHandler {
             return EMPTY_RESPONSE;
         }
 
+        String selectSpec = getSelectSpec(entityDetailsToSelect);
+        if (StringUtils.isEmpty(selectSpec)) {
+            return EMPTY_RESPONSE;
+        }
+
         return new Query2SQLResponse(
-                " SELECT " + getSelectSpec(entityDetailsToSelect) +
-                        " FROM " + relationToSearchIn.getFromSpec()
+                " SELECT " + selectSpec + " FROM " + relationToSearchIn.getFromSpec()
         );
     }
 
@@ -113,6 +118,7 @@ public class Query2SQLHandler {
         return entityDetailsToSelect
                 .stream()
                 .map((e) -> e.getKeys().stream().map((k) -> getColumnSelect(e, k)).collect(Collectors.joining(", ")))
+                .filter((e) -> StringUtils.isNotEmpty(e))
                 .collect(Collectors.joining(", "));
     }
 
@@ -120,16 +126,17 @@ public class Query2SQLHandler {
         return e.getEntityNameActual() + "." + k.getKeyActual();
     }
 
-    private DataEntityRelation getRelationToSearchIn(List<String> entitiesStore) {
+    private DataEntityRelation getRelationToSearchIn(Collection<String> entitiesStore, Collection<String> allTokenAlias) {
         return DataConfigHandler.getInstance().getEntityRelationships()
                 .stream()
+                .filter((r) -> DataConfigHandler.getInstance().canUseRelation(r.getName(), allTokenAlias))
                 .map((r) -> getRelationshipMatchCount(r, entitiesStore))
                 .max((c1, c2) -> c1.matchedNodeCount == c2.matchedNodeCount ? c2.totalNodeCount - c1.totalNodeCount : c1.matchedNodeCount - c2.matchedNodeCount)
                 .get()
                 .relation;
     }
 
-    private RelationshipMatchCount getRelationshipMatchCount(DataEntityRelation relation, List<String> entitiesStore) {
+    private RelationshipMatchCount getRelationshipMatchCount(DataEntityRelation relation, Collection<String> entitiesStore) {
         RelationshipMatchCount count = new RelationshipMatchCount(relation);
         entitiesStore.forEach((e) -> {
             if (DataConfigHandler.getInstance().isEntityExistsInRelation(e, relation)) {

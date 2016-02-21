@@ -1,6 +1,7 @@
 package com.wsdhaka.gdvf.query2sql.dataconfig;
 
 import com.wsdhaka.gdvf.utils.MapUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
@@ -23,6 +24,8 @@ public class DataConfigHandler {
     private Map<String, DataEntityStructure> entityDetails = new HashMap<>(); /* "entity-name" => [ "key1", "key2", ... ] */
 
     private List<DataEntityRelation> entityRelationships = new ArrayList<>(); /* Graph of all JOIN-ed relationships */
+
+    private Map<String, List<String>> mandatoryAliasForRelation = new HashMap<>(); /* "relation" => [ "alias1", "alias2" ] */
 
     public static DataConfigHandler getInstance() {
         return instance;
@@ -47,6 +50,15 @@ public class DataConfigHandler {
 
     public boolean isEntity(String token) {
         return entityDetails.keySet().contains(token);
+    }
+
+    public boolean canUseRelation(String relationName, Collection<String> allTokenAliases) {
+        List<String> mandatoryTokenAlias = mandatoryAliasForRelation.get(relationName);
+        if (CollectionUtils.isNotEmpty(mandatoryTokenAlias)) {
+            return mandatoryTokenAlias.stream().allMatch((e) -> allTokenAliases.contains(e));
+        }
+
+        return true;
     }
 
     public String getStoreEntity(String token) {
@@ -100,9 +112,7 @@ public class DataConfigHandler {
                 MapUtils.entry("human", Arrays.asList("traveller")),
                 MapUtils.entry("people", Arrays.asList("traveller")),
                 MapUtils.entry("comment", Arrays.asList("feedback")),
-                MapUtils.entry("path", Arrays.asList("tourpath")),
-                MapUtils.entry("traveller", Arrays.asList("traveller", "tourtraveller")),
-                MapUtils.entry("feedback", Arrays.asList("travellerfeedback"))
+                MapUtils.entry("path", Arrays.asList("tourpath"))
         );
 
         tokenStoreEntity = MapUtils.getStaticMap(
@@ -148,6 +158,8 @@ public class DataConfigHandler {
                         new DataKeyStructure("starttime", "startTime"), new DataKeyStructure("endtime", "endTime")
                 ))),
 
+                MapUtils.entry("tourtraveller", new DataEntityStructure("tourtraveller", "tourtraveller", Arrays.asList())),
+
                 MapUtils.entry("travellerfeedback", new DataEntityStructure("travellerfeedback", "travellerfeedback", Arrays.asList(
                         new DataKeyStructure("feedback", "feedback")
                 )))
@@ -165,8 +177,12 @@ public class DataConfigHandler {
                 getTourRelation(),
                 getTravellerRelation(),
                 getTourPathRelationship(),
-                getTourTravellerRelationship(),
-                getTravellerFeedbackRelationship()
+                getTravellerFeedbackRelationship(),
+                getTourTravellerRelationship()
+        );
+
+        mandatoryAliasForRelation = MapUtils.getStaticMap(
+                MapUtils.entry("travellerfeedback", Arrays.asList("feedback"))
         );
     }
 

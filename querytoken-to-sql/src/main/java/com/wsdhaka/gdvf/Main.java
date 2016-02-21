@@ -18,6 +18,7 @@ public class Main {
         init();
 
         Spark.post("/querytosql", "application/json", (req, res) -> new Query2SQLHandler().doGet(req, res), new JsonResponseTransformer());
+        Spark.options("/querytosql", "application/json", (req, res) -> true);
 
         Spark.exception(IllegalArgumentException.class, (e, request, response) -> {
             response.status(HttpStatus.SC_BAD_REQUEST);
