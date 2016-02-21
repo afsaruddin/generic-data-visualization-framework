@@ -49,11 +49,14 @@
         var avaialableSuggestions = [];
         responseData = JSON.parse(responseData);
         if (typeof responseData !== 'undefined') {
-           for (var i =0 ; i < responseData.suggestions.length; i++) {
-             avaialableSuggestions.push(responseData.suggestions[i].text);
-             suggestionsMapper[avaialableSuggestions[i].toLowerCase().trim()] = responseData.suggestions[i];
-           }
-          populateAutocompleteSuggestions(responseData.suggestions);
+           if (responseData.suggestions) {
+             for (var i =0 ; i < responseData.suggestions.length; i++) {
+               avaialableSuggestions.push(responseData.suggestions[i].text);
+               suggestionsMapper[avaialableSuggestions[i].toLowerCase().trim()] = responseData.suggestions[i];
+             }
+            populateAutocompleteSuggestions(responseData.suggestions);
+        }
+
        }
       }
 
