@@ -7,7 +7,7 @@ app = Flask(__name__)
 api = Api(app)
 
 
-api.add_resource(QueryHandler, '/queryHandler/<category>/<query>')
+api.add_resource(QueryHandler, '/queryhandler/<category>/<query>')
 
 
 if __name__ == '__main__':
