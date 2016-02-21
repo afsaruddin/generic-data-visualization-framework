@@ -36,19 +36,8 @@ class SocketHandler(websocket.WebSocketHandler):
     
     # Handles incoming messages on the WebSocket
     def on_message(self, message):
-        message = message.strip()
-        querysubmit = False
-
-        if message.endswith('-qs'):
-            querysubmit = True
-            message = message.rstrip('-qs').strip()
-
-        if querysubmit:
-            final_query = qs.get_final_query(message)
-            self.write_message(json.dumps(final_query))
-        else:
-            suggestions = qs.get_suggestions(message)
-            self.write_message(json.dumps(suggestions))
+        suggestions = qs.get_suggestions(message)
+        self.write_message(json.dumps(suggestions))
 
     # Invoked when the WebSocket is closed
     def on_close(self):
