@@ -1,15 +1,13 @@
 package com.wsdhaka.gdvf.query2sql;
 
-import java.util.List;
-
 public class Query2SQLRequest {
-    private List<String> select;
+    private String text;
 
-    public List<String> getSelect() {
-        return select;
+    public String getText() {
+        return text;
     }
 
-    public void setSelect(List<String> select) {
-        this.select = select;
+    public void setText(String text) {
+        this.text = text;
     }
 }

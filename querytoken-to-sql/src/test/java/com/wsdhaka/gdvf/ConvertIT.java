@@ -27,11 +27,11 @@ public class ConvertIT extends BaseIT {
 
     @Test
     public void testOk() throws IOException {
-        testQueryToSQL("{\"select\": [ \"location\" ]}", "SELECT name FROM location");
-        testQueryToSQL("{\"select\": [ \"location\" ], \"something\": \"else\"}", "SELECT name FROM location");
-        testQueryToSQL("{\"select\": [ \"name\" ]}", "SELECT name FROM profession");
-        testQueryToSQL("{\"select\": [ \"tour\", \"schedule\" ]}", "SELECT startTime, endTime, costPerPerson FROM tour");
-        testQueryToSQL("{\"select\": [ \"tour\", \"cost\" ]}", "SELECT startTime, endTime, costPerPerson FROM tour");
+        testQueryToSQL("{\"text\": \"location\"}", "SELECT name FROM location");
+        testQueryToSQL("{\"text\": \"location\", \"something\": \"else\"}", "SELECT name FROM location");
+        testQueryToSQL("{\"text\": \"name\" }", "SELECT name FROM profession");
+        testQueryToSQL("{\"text\": \"tour schedule\" }", "SELECT startTime, endTime, costPerPerson FROM tour");
+        testQueryToSQL("{\"text\": \"tour cost\" }", "SELECT startTime, endTime, costPerPerson FROM tour");
     }
 
     @Test
