@@ -84,12 +84,13 @@
       if (suggestionObject) {
         $.ajax({
           type: "POST",
-          url: "http://169.45.220.234:4567/submitquery",
+          url: "http://169.45.107.190:5000/queryhandler/",
           contentType: "application/json",
           data: JSON.stringify(suggestionObject),
           success: function(responseData) {
             if (responseData.data) {
-              drawChart(responseData.chartType, responseData.data);
+              drawChart("donut", responseData.data);
+              createTable(responseData.data);
             }
           },
           error: function(err){
@@ -97,7 +98,6 @@
           },
           dataType: "json"
         });
-        $("#searchBox").val("");
       }
     }
 
@@ -105,8 +105,6 @@
       if(chartType.toLowerCase().trim() == "pie") createPieChart(data, true);
       else if(chartType.toLowerCase().trim() == "donut") createPieChart(data, false);
       else if(chartType.toLowerCase().trim() == "bar") createBarChart(data);
-      else createTable(data);
-
     }
 
      function getSuggestionObject(queryString) {

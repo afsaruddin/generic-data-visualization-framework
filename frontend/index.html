@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="resources/css/style.css" type="text/css" media="screen" charset="utf-8" />
   <link rel="stylesheet" href="resources/css/chartStyle.css" type="text/css" media="screen" charset="utf-8" />
   <link rel="stylesheet" href="resources/bootstrap/css/bootstrap.min.css" type="text/css" media="screen" charset="utf-8" />
+  <link rel="stylesheet" href="resources/font-awesome/css/font-awesome.min.css" type="text/css" media="screen" charset="utf-8" />
   <link href='https://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css' charset="utf-8" >
 </head>
 <body>
@@ -27,7 +28,7 @@
             <div class="input-group">
               <input type="text" id="searchBox" class="form-control" placeholder="Search for...">
               <span class="input-group-btn">
-                <button class="btn btn-default" type="button"  id="go">Go!</button>
+                <button class="btn btn-primary" type="button" id="go">Go!</button>
               </span>
             </div>
           </div>
@@ -36,6 +37,15 @@
 
 
     <div class="chart" id="chart">
+    </div>
+    <div>
+      <label id="totalRows" class="totalRows"></label>
+      <!-- <label id="barChart" class="barChart"><a href="javascript:void(0);" ><i class="fa fa-bar-chart fa-stack-2x"></i></a></label> -->
+      <!-- <label id="pieChart" class="pieChart"><a href="#" ><i class="fa fa-pie-chart fa-stack-2x"></i></a></label> -->
+    </div>
+
+    <div class="tableData" id="tableData">
+
     </div>
 
   </div>

@@ -1,4 +1,10 @@
+var key = "" , value = "";
+
 function createBarChart(data) {
+
+  d3.selectAll("svg").remove();
+  if(!initKeyValue(data[0])) return;
+
   var margin = {top: 20, right: 20, bottom: 30, left: 40},
     width = $('#page-wrapper').width() - margin.left - margin.right,
     height = 320 - margin.top - margin.bottom;
@@ -24,8 +30,8 @@ function createBarChart(data) {
     .append("g")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-      x.domain(data.map(function(d) { return d.letter; }));
-      y.domain([0, d3.max(data, function(d) { return d.frequency; })]);
+      x.domain(data.map(function(d) { return d[key]; }));
+      y.domain([0, d3.max(data, function(d) { return d[value]; })]);
 
       svg.append("g")
           .attr("class", "x axis")
@@ -46,26 +52,43 @@ function createBarChart(data) {
           .data(data)
         .enter().append("rect")
           .attr("class", "bar")
-          .attr("x", function(d) { return x(d.letter); })
+          .attr("x", function(d) { return x(d[key]); })
           .attr("width", x.rangeBand())
-          .attr("y", function(d) { return y(d.frequency); })
-          .attr("height", function(d) { return height - y(d.frequency); });
+          .attr("y", function(d) { return y(d[value]); })
+          .attr("height", function(d) { return height - y(d[value]); });
 
 }
 
+function initKeyValue(data) {
+  console.log('datanfdknknkn: ' , data);
+  for (var _key in data) {
+    if (typeof data[_key] === 'number') {
+      value = _key;
+    }
+    else if (typeof data[_key] === 'string' ) {
+      key = _key;
+    }
+    if (key && value) return true;
+  }
+  return false;
+}
+
+function getRandomArbitrary(min, max) {
+    return Math.random() * (max - min) + min;
+}
+
 function createPieChart(data, isPieChart) {
+  d3.selectAll("svg").remove();
+  if(!initKeyValue(data[0])) return;
   var width = $('#page-wrapper').width(),
     height = 320,
     radius = Math.min(width, height) / 2;
-
+  var colors = ['#ff2b00', '#9f6079', '#245edb', '#2492db', '#bcb5c4', '#1de2c4', '#5b68a4', '#000000', '#0909f6', '#7d73a0', '#e65e19', '#4bb4a1', '#30cfc1', '#73de21', '#ade01f', '#21b2de', '#33cc42', '#bd424a', '#a6bf40', '#59a674', '#fa055f', '#346ecb', '#e99116', '#2dd282', '#1be4de', '#ed5012', '#e41b8d', '#5bcf30', '#6a9495', '#665ea1', '#6828d7', '#a450af', '#dd0e56', '#280df2', '#e71848', '#ac6953', '#ccb833', '#679698', '#818b74', '#f708db', '#98b04f', '#9355aa', '#d12e39', '#388bc7', '#21de9f'];
   var decrementInner = 70;
   if (isPieChart) decrementInner = radius;
   var color = d3.scale.ordinal()
-      .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+      .range(colors);
 
-  // var arc = d3.svg.arc()
-  //     .outerRadius(radius - 10)
-  //     .innerRadius(0);
   var arc = d3.svg.arc()
       .outerRadius(radius - 10)
       .innerRadius(radius - decrementInner);
@@ -76,7 +99,7 @@ function createPieChart(data, isPieChart) {
 
   var pie = d3.layout.pie()
       .sort(null)
-      .value(function(d) { return d.population; });
+      .value(function(d) { return d[value]; });
 
   var svg = d3.select(".chart").append("svg")
       .attr("width", width)
@@ -91,12 +114,12 @@ function createPieChart(data, isPieChart) {
 
       g.append("path")
         .attr("d", arc)
-        .style("fill", function(d) { return color(d.data.age); });
+        .style("fill", function(d) { return color(getRandomArbitrary(0, 20)); });
 
       g.append("text")
         .attr("transform", function(d) { return "translate(" + labelArc.centroid(d) + ")"; })
         .attr("dy", ".35em")
-        .text(function(d) { return d.data.age; });
+        .text(function(d) { return d.value; });
 }
 
 
@@ -340,10 +363,16 @@ function createConceptMapChart(data){
 
 function createTable(data) {
 
+    $(".tableData").text("");
+    if (data.length >=2 ) $("#totalRows").text("ROWS " + data.length);
+    else {
+      $("#totalRows").text("No records found for query!");
+      return;
+    }
     var columns = [];
     for (var key in data[0]) columns.push(key);
 
-    var table = d3.select('.chart').append('table').attr("class" , "table table-hover")  //table-bordered
+    var table = d3.select('.tableData').append('table').attr("class" , "table table-hover")
     var thead = table.append('thead')
     var	tbody = table.append('tbody');
 
