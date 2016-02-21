@@ -40,3 +40,5 @@ class QueryHandler(Resource):
 
     def get(self):
         abort(501, message="Operation not supported")
+    def options(self):
+        return {},200
