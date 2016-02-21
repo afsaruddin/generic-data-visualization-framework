@@ -1,8 +1,7 @@
 """ Query suggestor """
 
-import nltk
+
 import numpy as np
-from nltk.tag import pos_tag
 
 class QuerySuggestor:
     """ Query suggestor contains necessary methods
@@ -31,10 +30,8 @@ class QuerySuggestor:
             
         self.keywords = [item for key in list(self.db_schema) for item in self.db_schema[key]]
         self.keywords += list(self.db_schema)
-        self.keywords = self.sort(np.unique(self.keywords).tolist())
+        self.keywords = sorted(np.unique(self.keywords).tolist())
         
-    def sort(self, items):
-        return np.sort(items).tolist()
     
     # Get next query suggestions based on db schema   
     def get_suggestions_from_schema(self, query):
@@ -50,33 +47,7 @@ class QuerySuggestor:
             return [query_wo_lastword + ' ' + next_word for next_word in entities]
             
         return [query + ' ' + next_word for next_word in list(self.db_schema.keys())]
-            
-    def extract_entities(self, text):
-        for sent in nltk.sent_tokenize(text):
-            for chunk in nltk.ne_chunk(nltk.pos_tag(nltk.word_tokenize(sent))):
-                if hasattr(chunk, 'node'):
-                    print chunk.node, ' '.join(c[0] for c in chunk.leaves())
                     
-    # Get final suggestion query with selected tokens needed to build SQL             
-    def get_final_query(self, query):
-        """ Get final query with keywords selected and processed 
-        
-            Parameters
-            ----------
-            
-            query : string, mandatory
-                The initial query 
-        """
-        
-        result = {'suggestions': []};
-        suggestion_text = {};
-        words = pos_tag(nltk.word_tokenize(query))
-        suggestion_text['select'] = [word for word,pos in words if pos.startswith('NN')]
-        suggestion_text['text'] = query
-        result['suggestions'] = [suggestion_text]
-        
-        # return suggestions and required tokens
-        return result
                     
     # Get query suggestions given user query
     def get_suggestions(self, query):
