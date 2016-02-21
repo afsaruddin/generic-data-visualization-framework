@@ -82,9 +82,6 @@
 
     function sendPostRequest (suggestionObject) {
       if (suggestionObject) {
-        suggestionObject = { "suggestionData" : suggestionObject };
-        console.log('suggestionObject: ' , suggestionObject );
-
         $.ajax({
           type: "POST",
           url: "http://169.45.220.234:4567/submitquery",
@@ -100,7 +97,6 @@
           },
           dataType: "json"
         });
-
         $("#searchBox").val("");
       }
     }
