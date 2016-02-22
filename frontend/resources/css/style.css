@@ -106,6 +106,6 @@ div.tooltip {
 .no-records{
   display: none;
   padding: 0;
-  width: 500px;
+  width: 90%;
   margin: 20px;
 }

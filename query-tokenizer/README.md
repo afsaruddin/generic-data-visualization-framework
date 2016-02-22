@@ -5,6 +5,16 @@ This module is responsible for converting a raw human query into the KNOWN token
 
 ##### Python 2.7.9
 
+##### NumPy
+NumPy is the fundamental package for scientific computing with Python.
+
+A `C` compiler, either `GCC` or `clang`, is needed because the `numpy` library we are using has some C extensions, which will need to be compiled.
+We suggest to install the whole `build-essential` and `python-dev`
+
+`apt-get install build-essential python-dev`
+
+`pip install numpy`
+
 ##### NLTK
 Natural Language Toolkit http://www.nltk.org/install.html
 
