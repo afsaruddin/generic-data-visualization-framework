@@ -1,33 +1,64 @@
 # Generic Data Visualization Framework
 
-### Overview
-In an organization, there are tons of data. When anyone wants to see / analyse the data, (s)he finds all hurdles and lean to a BI tool. So far there are few “satisfactory” BI tools are out there having their own limitations:
+### Background
 
-- You need to be a bit techy to understand the data storage structure (say, columns) and SQL-ing.
+In our software development work lives, we have seen that, whatever the organization is, it produces tons of data along side with the organization business. To see / analyse those tons of data, we start being surprised seeing the fact that we have limited options to choose tools for analysis. Not all are “satisfactory”; having their own limitations:
+
+- You need to be a bit techy to understand the underlying storage data structure (say, columns) and SQL-ing.
 - You cannot extend the way of report making. The tool is not a framework so that you can reach your expectation.
 
-We believe, with tons of data, we need tons of possibilities to see / analyse those data. With some techy way, it doesn’t reveal that much possibilities. A natural language searching would be great like, for a tour management company, we can query data by: _show types of persons travel in a year_, _show average tour cost in winter to X country_ etc. For example, http://simpleql.com/ . Well, with simplesql, we can serve our natural language searching but it comes with some limitations:
+We believe,
 
-- You cannot search with synonym words nor you can customize the query processor to process your desired word with some data column. For example, “show persons having age less than 18” and “show persons that are not adult” should endup in same result.
-- It's not free that you can modify to your desire.
+- with tons of data, we need tons of possibilities to see / analyse those data.
+- with an unextendible (or closed-source) tool, a organization can never reach to its expected analysis goals.
 
-To create tons of possibilities to see / analyse data, we need data owner controlled query management, developer friendly stuffs (say, an open source framework) so that world can create the tons of possibilities.
+We aim to achive what we believe :) With that, we see, dependency to techy thing doesn’t reveal that much analysis possibilities to non-tech user. A natural language searching would be great like, for a tour management company, we can query data by: _show types of persons travel in a year_, _show average tour cost in winter to X country_ etc. Example: http://simpleql.com/ . We are mostly inspired by this to groom our idea and implementation. Well, what's wrong with simplesql then? Its not free / open-source :)
 
-### Goals
-- Let user search with natural language having suggestions. This suggestions are 1 of the major core part. Other than suggestions, no user can find wanted data easily. If someone tries with 10 natural queries and didn’t get the result, then its high chance that the user will mark the tool as “unusable” in his / her brain.
+With a sweet hackathon day ( courtesy: https://koding.com ), we started implementing the idea.
 
-  The suggestions can be derived from some pre-inputted (by the data owner) queries and the queries that people are searching. The system can be machine-learnable.
+### Overview
+
+This project is aimed to act as a framework. The basic is simple: start querying with what you are looking, framework suggests / guides you to reach your desired query, see the results in many possible ways (tabular, bar / line / pi / bubble chart etc) or publish as an API response or export to excel / pdf.
+
+We are visualizing many things (*Features* section below) about this framework but keeping some base line where we keep much focus.
+
+- Let user search with natural language confortably. Showing suggestions are 1 of the major part. Other than suggestions, no user can find desired data easily. If someone tries with some (say, 6 / 7) natural queries and didn’t get the result, then there is high chance the user will start thinking the tool as “unusable”.
+
+  The suggestions can be derived from some pre-inputted (by the data owner) queries and the queries that people are searching. This module can be machine-learnable.
 
   Showing who is searching with what in realtime will make the user adopt the querying process.
 
-- Let the data owner control the relation between natural language and the data language (i.e., SQL). A data owner knows best which natural word means what data. Our system should not control it.
+- Let the data owner to control the relation between natural language and the data language (i.e., SQL). A data owner knows best which natural word means what data. The framework will provide sufficient way for this mapping.
 
   This is important for revealing the possibilities to search same result with different sentences.
 
 - Present the data in a desired visual format and let the user control the visual. An intelligence is needed for choosing most relevant graph-type (bar / PI etc) for a query. This can be derived through machine learning for every user’s activities.
 
 - Support versatile types of SQL-ers (like mysql, postgresql, mongo, spark etc)
-Make the whole implementation modular, act like a framework, so that anyone can customize it.
+
+### Features
+
+##### Use Case Perspective
+
+- Search by natural language with localized support.
+- See the results in graphical presentation.
+- See relevant query suggestions while typing something.
+- Choose the results presentations (out of bar / chart / map etc).
+- See what others are querying about now. Can select and run those query too.
+- Save searched queries.
+- Export / email / slack the result to recipient in image / pdf format.
+- Get email / slack notification when a query takes long time.
+- Can schedule for repeating run of same query where results will be emailed / slacked.
+- For a repeating query, add a threshold value whose lower / upper value will trigger the notification for results.
+- ... More ... :)
+
+##### Framework Perspective
+
+- Extract as much as module we can so that individual module can be developed / managed individually.
+- Use REST for module communication.
+- User WebSocker for frontend - backend streaming communication.
+- Publish api endpoint for the query and result.
+- ... More ... :)
 
 ### Version History
 
