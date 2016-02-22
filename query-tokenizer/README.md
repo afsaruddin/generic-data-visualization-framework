@@ -45,6 +45,7 @@ A Python web framework and asynchronous networking library. We used it for expos
     Server: TornadoServer/4.3
     
     {"query": "show tour cost", "select": ["cost", "tour"]}
+    {'query': 'what type of persons travels ?', 'select': ['tour', 'traveller']}
 ```
 
 # Running on server

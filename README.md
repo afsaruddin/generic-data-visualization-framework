@@ -62,10 +62,17 @@ We are visualizing many things (*Features* section below) about this framework b
 
 ### Framework Modules
 
+##### Modules relation view
+![module-relation-view.png](https://raw.githubusercontent.com/afsaruddin/generic-data-visualization-framework/develop/doc/modules.png)
+
 - [Frontend](frontend/README.md): The UI where you see everything.
+
 - [Query Suggestor](query-suggestor/README.md): This handles suggestions for any query user is typing. It is intended to give a high relevant suggestions. It also maintains live streaming of queries user are doing in the system.
+
 - [Query Tokenizer](query-tokenizer/README.md): This does the natual language processing over user's query. We are using [NTLK](http://www.nltk.org) to parse out our known tokens. It is intended to choose a high relevant tokens.
+
 - [Query To SQL](querytoken-to-sql/README.md): After the tokenizer is done with tokenizing, this module starts converting the tokens into SQLs of underlying data sources.
+
 - [Query Handler](query-handler/README.md): The [BFF](http://samnewman.io/patterns/architectural/bff/) endpoint to serve necessary stuffs to the frontend.
 
 ### Version History
