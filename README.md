@@ -1,6 +1,6 @@
 # Generic Data Visualization Framework
 
-## Overview
+### Overview
 In an organization, there are tons of data. When anyone wants to see / analyse the data, (s)he finds all hurdles and lean to a BI tool. So far there are few “satisfactory” BI tools are out there having their own limitations:
 
 - You need to be a bit techy to understand the data storage structure (say, columns) and SQL-ing.
@@ -13,7 +13,7 @@ We believe, with tons of data, we need tons of possibilities to see / analyse th
 
 To create tons of possibilities to see / analyse data, we need data owner controlled query management, developer friendly stuffs (say, an open source framework) so that world can create the tons of possibilities.
 
-## Goals
+### Goals
 - Let user search with natural language having suggestions. This suggestions are 1 of the major core part. Other than suggestions, no user can find wanted data easily. If someone tries with 10 natural queries and didn’t get the result, then its high chance that the user will mark the tool as “unusable” in his / her brain.
 
   The suggestions can be derived from some pre-inputted (by the data owner) queries and the queries that people are searching. The system can be machine-learnable.
@@ -28,3 +28,15 @@ To create tons of possibilities to see / analyse data, we need data owner contro
 
 - Support versatile types of SQL-ers (like mysql, postgresql, mongo, spark etc)
 Make the whole implementation modular, act like a framework, so that anyone can customize it.
+
+### Version History
+
+##### 0.2 (22, Feb 2016)
+
+- A "demo-able" version :)
+- `frontend` module shows a simple searchbox, result data table / charts and a live query streaming.
+
+##### 0.1 (21, Feb 2016)
+
+- The very first initial version after integrating with all modules :)
+
