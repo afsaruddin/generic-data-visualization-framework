@@ -12,9 +12,9 @@ This module is responsible for converting the tokens (came from a raw human quer
 - Url: http://169.45.220.234:4567/querytosql ( Example endpoint; Deployed in [Koding VM](https://koding.com) )
 - Method: POST
 - Example:
-    
+
+```bash    
     afsar@afsar-ws-mac:querytoken-to-sql$ curl -i -H "Content-Type: application/json" -X POST --data '{"text": "what is tour cost"}' 'http://169.45.220.234:4567/querytosql'
-    
     HTTP/1.1 200 OK
     Date: Mon, 22 Feb 2016 06:09:09 GMT
     Access-Control-Allow-Origin: *
@@ -26,9 +26,12 @@ This module is responsible for converting the tokens (came from a raw human quer
     Server: Jetty(9.3.z-SNAPSHOT)
     
     {"sql":" SELECT tour.costPerPerson FROM tm.tour tour"}
+```
 
 # Running on server
 
-- `mvn clean package`
-- `java -jar target/query-to-sql-x.y.z.jar`
+```bash    
+    mvn clean package
+    java -jar target/query-to-sql-x.y.z.jar
+```
 
