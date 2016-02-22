@@ -4,25 +4,16 @@ import json
 
 class HttpUtil(object):
     @staticmethod
-    def post_url(url,request_body=None):
-        ret_values = []
+    def post_url(url, request_body=None):
+        try:
+            post_request = requests.post(url, data=json.dumps(request_body), headers={"content-type": "text/javascript"})
 
-        print(request_body)
+            if post_request.status_code == 200:
 
-        # post_request = requests.post(url, json=request_body)
+                return {'success': True,
+                        'data': post_request.json()}
 
-        post_request=requests.post(url, data=json.dumps(request_body), headers={"content-type": "text/javascript"})
-
-        print(post_request.status_code)
-
-        if post_request.status_code == 200:
-
-            return { 'success':True,
-                     'data':post_request.json() }
-
-            ret_values['success'] = True
-            ret_values['data'] = post_request.json()
-        else:
+            else:
+                return {'success': False}
+        except:
             return {'success': False}
-
-        return {'success': False}

@@ -9,6 +9,8 @@
       var host = "ws://169.44.61.115:9090/ws";
       // var host = "ws://192.168.1.50:9090/ws";
       var responseData = null;
+      var chartData = null;
+      var selectedChart =  "bar";
       try {
           webSocket = new WebSocket(host);
 
@@ -49,11 +51,17 @@
         var avaialableSuggestions = [];
         responseData = JSON.parse(responseData);
         if (typeof responseData !== 'undefined') {
-           for (var i =0 ; i < responseData.suggestions.length; i++) {
-             avaialableSuggestions.push(responseData.suggestions[i].text);
-             suggestionsMapper[avaialableSuggestions[i].toLowerCase().trim()] = responseData.suggestions[i];
-           }
-          populateAutocompleteSuggestions(responseData.suggestions);
+           if (responseData.suggestions) {
+             for (var i =0 ; i < responseData.suggestions.length; i++) {
+               avaialableSuggestions.push(responseData.suggestions[i].text);
+               suggestionsMapper[avaialableSuggestions[i].toLowerCase().trim()] = responseData.suggestions[i];
+             }
+            populateAutocompleteSuggestions(responseData.suggestions);
+        }
+        else {
+          window.gdvf.hisCom.newMessage(responseData);
+        }
+
        }
       }
 
@@ -75,6 +83,8 @@
               // Set the next input's value to the "value" of the item.
               $(this).next("#searchBox").val(ui.item.value);
               event.preventDefault();
+              resetUI();
+              $('.loader').css('display', 'block');
               sendPostRequest(ui.item.object);
           }
       });
@@ -89,7 +99,8 @@
           data: JSON.stringify(suggestionObject),
           success: function(responseData) {
             if (responseData.data) {
-              drawChart("donut", responseData.data);
+              chartData = responseData.data;
+              drawChart("bar", responseData.data);
               createTable(responseData.data);
             }
           },
@@ -100,6 +111,21 @@
         });
       }
     }
+
+    $("#barChart").click(function() {
+      selectedChart = "bar";
+      if (chartData) createBarChart(chartData);
+    });
+
+    $("#donutChart").click(function() {
+      selectedChart = "donut";
+      if (chartData) createPieChart(chartData, false);
+    });
+
+    $("#pieChart").click(function() {
+      selectedChart = "pie";
+      if (chartData) createPieChart(chartData, true);
+    });
 
     function drawChart(chartType, data){
       if(chartType.toLowerCase().trim() == "pie") createPieChart(data, true);

@@ -3,8 +3,11 @@ html body {
   /*background-color: #3498db*/
 }
 #page-wrapper {
-  width: 80%;
+  width: 65%;
   margin: 0 auto;
+
+  -webkit-transition : all 1s ease;
+  -moz-transition : all 1s ease;
 }
 
 #page-wrapper .content {
@@ -14,4 +17,81 @@ html body {
 #page-wrapper h1 {
   text-align: center;
   font-family: 'Bree Serif', serif;
+}
+
+.recent-query-icon {
+  cursor: pointer;
+  float: left;
+  width: 25px;
+  padding: 4px 8px;
+}
+
+.recent-query {
+  margin-top: 140px;
+  right: 20px !important;
+  display: none;
+  font-family: vardana !important;
+  font-size: 14px !important;
+}
+.recent-query ul {
+  padding-left: 10px !important;
+}
+.recent-query ul span {
+  font-size: 14px !important;
+}
+
+.loader {
+  text-align: center;
+  margin: 25px 0;
+  display: none;
+}
+
+.other-charts {
+  display: none;
+  margin: 20px 0 30px 0 !important;
+}
+
+.other-charts > a {
+  margin-left: 10px;
+}
+
+div.tooltip {
+  position: absolute;
+  text-align: left;
+  width: 120px;
+  min-height: 30px;
+  padding: 8px 0 8px 10px;
+  font: 12px;
+  background: white;
+  border: 1px solid #800000;
+  border-radius: 5px;
+  pointer-events: none;
+  opacity: 0;
+  min-width: 150px;
+}
+
+.table-wrapper {
+  padding: 0;
+  margin-top: 15px;
+  color: #434343;
+}
+
+.table .table-striped th {
+    font-weight: 700!important;
+}
+
+.table thead {
+  background-color: #F2F0F0!important;
+  height: 40px!important;
+}
+
+.table thead th {
+    padding: 7px 12px!important;
+    border-bottom: none!important;
+    border-top: 1px solid #BFBFBF!important;
+    font-size: 16px !important;
+}
+
+.table tbody tr:hover {
+  background-color: lightcyan !important;
 }

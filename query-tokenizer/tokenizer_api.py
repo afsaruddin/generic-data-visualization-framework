@@ -1,8 +1,11 @@
+""" QueryTokenizer API """
+
 from tornado import web, ioloop
 import query_tokenizer
 
 qt = query_tokenizer.QueryTokenizer()
 
+# Handler for `/querytotoken` endpoint
 class RestApiHandler(web.RequestHandler):
     def get(self):
         q = self.get_argument('q', '')

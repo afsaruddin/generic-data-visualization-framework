@@ -27,11 +27,40 @@ public class ConvertIT extends BaseIT {
 
     @Test
     public void testOk() throws IOException {
-        testQueryToSQL("{\"text\": \"location\"}", "SELECT name FROM tm.location LIMIT 20");
-        testQueryToSQL("{\"text\": \"location\", \"something\": \"else\"}", "SELECT name FROM tm.location LIMIT 20");
-        testQueryToSQL("{\"text\": \"tell me name\" }", "SELECT name FROM tm.profession LIMIT 20");
-        testQueryToSQL("{\"text\": \"what is the tour schedule\" }", "SELECT startTime, endTime, costPerPerson FROM tm.tour LIMIT 20");
-        testQueryToSQL("{\"text\": \"what is the tour cost\" }", "SELECT startTime, endTime, costPerPerson FROM tm.tour LIMIT 20");
+        testQueryToSQL("{\"text\": \"what is the tour schedule\" }", "SELECT tour.startTime, tour.endTime, employee.name, traveller.name, profession.name" +
+                " FROM tm.tourtraveller tourtraveller" +
+                " INNER JOIN tm.tour tour ON (tourtraveller.tourId = tour.tourId)" +
+                " INNER JOIN tm.employee employee ON (tour.planOwnerId = employee.employeeId)" +
+                " INNER JOIN tm.traveller traveller ON (tourtraveller.travellerId = traveller.travellerId)" +
+                " INNER JOIN tm.profession profession ON (traveller.professionId = profession.professionId)");
+
+        testQueryToSQL("{\"text\": \"tour traveller\"}", "SELECT tour.startTime, tour.endTime, tour.costPerPerson, traveller.name, traveller.gender, traveller.age" +
+                        " FROM tm.tourtraveller tourtraveller" +
+                        " INNER JOIN tm.tour tour ON (tourtraveller.tourId = tour.tourId)" +
+                        " INNER JOIN tm.employee employee ON (tour.planOwnerId = employee.employeeId)" +
+                        " INNER JOIN tm.traveller traveller ON (tourtraveller.travellerId = traveller.travellerId)" +
+                        " INNER JOIN tm.profession profession ON (traveller.professionId = profession.professionId)"
+        );
+
+        testQueryToSQL("{\"text\": \"traveller profession\"}", "SELECT traveller.name, traveller.gender, traveller.age, profession.name" +
+                        " FROM tm.traveller traveller" +
+                        " INNER JOIN tm.profession profession ON (traveller.professionId = profession.professionId)"
+        );
+
+        testQueryToSQL("{\"text\": \"what is the tour feedback\" }", "SELECT travellerfeedback.feedback FROM tm.travellerfeedback travellerfeedback");
+
+        testQueryToSQL("{\"text\": \"what is the people comment\" }", "SELECT travellerfeedback.feedback, employee.name, traveller.name, profession.name" +
+                " FROM tm.travellerfeedback travellerfeedback" +
+                " INNER JOIN tm.tour tour ON (travellerfeedback.tourId = tour.tourId)" +
+                " INNER JOIN tm.employee employee ON (tour.planOwnerId = employee.employeeId)" +
+                " INNER JOIN tm.traveller traveller ON (travellerfeedback.travellerId = traveller.travellerId)" +
+                " INNER JOIN tm.profession profession ON (traveller.professionId = profession.professionId)");
+
+        testQueryToSQL("{\"text\": \"location\"}", "SELECT location.name FROM tm.location location");
+        testQueryToSQL("{\"text\": \"location\", \"something\": \"else\"}", "SELECT location.name FROM tm.location location");
+        testQueryToSQL("{\"text\": \"tell me name\" }", "SELECT traveller.name FROM tm.traveller traveller");
+        testQueryToSQL("{\"text\": \"what is the tour cost\" }", "SELECT tour.costPerPerson FROM tm.tour tour");
+        testQueryToSQL("{\"text\": \"what is the cost\" }", "SELECT tour.costPerPerson FROM tm.tour tour");
     }
 
     @Test
@@ -47,7 +76,7 @@ public class ConvertIT extends BaseIT {
 
     @Test
     public void testCORS() throws IOException {
-        HttpResponse httpResponse = RESTUtils.doOptions(HTTP_QUERY_TO_SQL_HOST + "/submitquery");
+        HttpResponse httpResponse = RESTUtils.doOptions(HTTP_QUERY_TO_SQL_HOST + "/querytosql");
         Assert.assertEquals("Access-Control-Allow-Origin: *", StringUtils.join(httpResponse.getHeaders("Access-Control-Allow-Origin"), ","));
         Assert.assertEquals("Access-Control-Allow-Methods: GET,PUT,POST,DELETE,OPTIONS", StringUtils.join(httpResponse.getHeaders("Access-Control-Allow-Methods"), ","));
         Assert.assertEquals("Access-Control-Allow-Headers: Content-Type,Authorization,X-Requested-With,Content-Length,Accept,Origin", StringUtils.join(httpResponse.getHeaders("Access-Control-Allow-Headers"), ","));

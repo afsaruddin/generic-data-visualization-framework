@@ -16,6 +16,7 @@
 </head>
 <body>
   <div id="page-wrapper">
+    <div class="tooltip"></div>
     <div class="content">
       <div class="row">
         <div class="col-md-12">
@@ -24,43 +25,70 @@
       </div>
 
         <div class="row" id="search">
-            <div class="col-md-12">
-            <div class="input-group">
-              <input type="text" id="searchBox" class="form-control" placeholder="Search for...">
-              <span class="input-group-btn">
-                <button class="btn btn-primary" type="button" id="go">Go!</button>
-              </span>
+            <div style="width: calc(100% - 40px); float:left;">
+              <div class="input-group">
+                <input type="text" id="searchBox" class="form-control" placeholder="Search for...">
+                <span class="input-group-btn">
+                  <button class="btn btn-primary" type="button" id="go">Go!</button>
+                </span>
+              </div>
+          </div>
+          <div>
+            <span class="recent-query-icon" title="Recent Queries"><i class="fa fa-users fa-2x"></i></span>
+          </div>
+        </div>
+
+        <div class="row loader">
+          <div class="col-md-12">
+            <span><i class="fa fa-spinner fa-pulse fa-3x"></i></span>
+          </div>
+        </div>
+
+        <div class="row other-charts">
+          <div class="col-md-12">
+            <div class="pull-right">
+              <a href="javascript:void(0);" title="Bar Chart" id="barChart"><i class="fa fa-bar-chart fa-2x"></i></a>
+              <a href="javascript:void(0);" title="Donut Chart" id="donutChart"><i class="fa fa-circle-o-notch fa-2x"></i></a>
+              <a href="javascript:void(0);" title="Pie Chart" id="pieChart"><i class="fa fa-pie-chart fa-2x"></i></a>
             </div>
           </div>
         </div>
+
+        <div class="row">
+          <div class="col-md-12">
+            <div class="chart" id="chart"></div>
+          </div>
+        </div>
+
     </div>
 
-
-    <div class="chart" id="chart">
-    </div>
-    <div>
+    <div class="table-wrapper">
       <label id="totalRows" class="totalRows"></label>
-      <!-- <label id="barChart" class="barChart"><a href="javascript:void(0);" ><i class="fa fa-bar-chart fa-stack-2x"></i></a></label> -->
-      <!-- <label id="pieChart" class="pieChart"><a href="#" ><i class="fa fa-pie-chart fa-stack-2x"></i></a></label> -->
-    </div>
-
-    <div class="tableData" id="tableData">
-
+      <div class="tableData" id="tableData">
     </div>
 
   </div>
 
-  <script src="js/websocket.js"></script>
   <script src="js/chart.js"></script>
+  <script src="js/hiscom.js"></script>
+  <script src="js/websocket.js"></script>
   <script>
     $(function() {
 
+      var populateData = function () {
+        $('.loader').css('display', 'block');
+        resetUI();
+        sendPostRequest();
+      };
+
       $("#go").click(function() {
-          sendPostRequest();
+          populateData();
       });
 
       $('#searchBox').keypress(function(event) {
-          if (event.keyCode == '13') sendPostRequest();
+          if (event.keyCode == '13') {
+            populateData();
+          }
       });
 
      var timer;
