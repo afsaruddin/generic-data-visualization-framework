@@ -32,7 +32,8 @@ A Python web framework and asynchronous networking library. We used it for expos
 - Url: http://169.44.61.115:9091/querytotoken
 - Method: GET
 - Param:
-..1. `q` - the query to tokenize
+`q` - the query to tokenize
+
 - Example:
 
 ```bash
@@ -45,7 +46,6 @@ A Python web framework and asynchronous networking library. We used it for expos
     Server: TornadoServer/4.3
     
     {"query": "show tour cost", "select": ["cost", "tour"]}
-    {'query': 'what type of persons travels ?', 'select': ['tour', 'traveller']}
 ```
 
 # Running on server
