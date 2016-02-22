@@ -59,10 +59,22 @@ class QueryTokenizer:
         
         max_score = max(scores)
         for index, score in enumerate(scores):
-            if score == max_score and score > 0.1:
+            if score == max_score and score > 0.25:
                 target_words.append(targets[index])
              
         return target_words
+        
+    # Get select tokes
+    def get_select_tokens(self, words):
+        select_result = [word.lower() for word,pos in words if pos.startswith('NN') or pos == 'WP']
+        selects = []
+        for select in select_result:
+            if select in self.keywords:
+                selects.append(select)
+            else:
+                selects += self.get_most_similar_words(select, self.keywords)
+         
+        return np.unique(selects).tolist()
                     
     # Get final suggestion query with selected tokens needed to build SQL             
     def get_final_query_with_tokens(self, query):
@@ -85,20 +97,13 @@ class QueryTokenizer:
         #NPs = list(tree.subtrees(filter=lambda x: x.label()=='NP' or x.label().startswith('NN') or x.label()=='WP'))
         #print [' '.join(NP.leaves()[0]) for NP in NPs ]
         #print [(word, pos) for word,pos in words if pos.startsWith('NN') or pos == 'WP']
-        result['select'] = [word.lower() for word,pos in words if pos.startswith('NN') or pos == 'WP']
-        selects = []
-        for select in result['select']:
-            if select in self.keywords:
-                selects.append(select)
-            else:
-                selects += self.get_most_similar_words(select, self.keywords)
-        result['select'] = np.unique(selects).tolist()
+        result['select'] = self.get_select_tokens(words)
         
         # return query and required tokens
         return result
         
         
-qs = QueryTokenizer()
-inputs = ['s', 'what type of persons travels ?', 'who are travelling ?', 'what is the tour schedule ?', 'what is the cost for a tour?']
-for q in inputs:
-    print qs.get_final_query_with_tokens(q)
+#qs = QueryTokenizer()
+#inputs = ['s', 'what type of persons travels ?', 'who are travelling ?', 'what is the tour schedule ?', 'what is the cost for a tour?']
+#for q in inputs:
+#    print qs.get_final_query_with_tokens(q)
