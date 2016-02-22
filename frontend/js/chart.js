@@ -52,7 +52,7 @@ function createBarChart(data) {
 
   var xAxis = d3.svg.axis()
       .scale(x)
-      .tickFormat(function (d ) { return d.substring(0,2); })
+      .tickFormat(function (d ) { return d; })
       .orient("bottom");
 
   var yAxis = d3.svg.axis()
@@ -115,7 +115,7 @@ function initKeyValue(data) {
     if (typeof data[_key] === 'number') {
       value = _key;
     }
-    else if (typeof data[_key] === 'string' ) {
+    else if (typeof data[_key] === 'string'  && data[_key].indexOf("GMT") < 0 ) {
       key = _key;
     }
     if (key && value) {
@@ -145,7 +145,7 @@ function createPieChart(data, isPieChart) {
   var width = $('#page-wrapper').width(),
     height = 320,
     radius = Math.min(width, height) / 2;
-  var colors = ['#ff2b00', '#9f6079', '#245edb', '#2492db', '#bcb5c4', '#1de2c4', '#5b68a4', '#000000', '#0909f6', '#7d73a0', '#e65e19', '#4bb4a1', '#30cfc1', '#73de21', '#ade01f', '#21b2de', '#33cc42', '#bd424a', '#a6bf40', '#59a674', '#fa055f', '#346ecb', '#e99116', '#2dd282', '#1be4de', '#ed5012', '#e41b8d', '#5bcf30', '#6a9495', '#665ea1', '#6828d7', '#a450af', '#dd0e56', '#280df2', '#e71848', '#ac6953', '#ccb833', '#679698', '#818b74', '#f708db', '#98b04f', '#9355aa', '#d12e39', '#388bc7', '#21de9f'];
+  var colors = ['#ff2b00', '#9f6079', '#245edb', '#2492db', '#bcb5c4', '#1de2c4', '#5b68a4', '#0909f6', '#7d73a0', '#e65e19', '#4bb4a1', '#30cfc1', '#73de21', '#ade01f', '#21b2de', '#33cc42', '#bd424a', '#a6bf40', '#59a674', '#fa055f', '#346ecb', '#e99116', '#2dd282', '#1be4de', '#ed5012', '#e41b8d', '#5bcf30', '#6a9495', '#665ea1', '#6828d7', '#a450af', '#dd0e56', '#280df2', '#e71848', '#ac6953', '#ccb833', '#679698', '#818b74', '#f708db', '#98b04f', '#9355aa', '#d12e39', '#388bc7', '#21de9f'];
   var decrementInner = 70;
   if (isPieChart) decrementInner = radius;
   var color = d3.scale.ordinal()
@@ -178,7 +178,7 @@ function createPieChart(data, isPieChart) {
            .duration(200)
            .style('opacity', '1');
             d3.select('.tooltip').html(
-              getTooltipHTML(d.data[value])
+              getTooltipHTML(d.data[key])
             )
             .style('left', (d3.event.pageX + 5) + 'px')
             .style('top', (d3.event.pageY - 30) + 'px');
