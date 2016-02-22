@@ -445,7 +445,8 @@ function createTable(data) {
     $('.loader').css('display', 'none');
 
     if (data.length >=2 ) {
-      $("#totalRows").text("Records found: " + data.length);
+      // $("#totalRows").text("Records found: " + data.length);
+      $("#totalRows").text("For demo purpose we are showing only 20 records");
     }
     else {
       $("#totalRows").text("No records found for query!");
