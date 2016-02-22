@@ -25,3 +25,6 @@ A Python web framework and asynchronous networking library. We used it for estab
 - `/pushhistory` - recievs query(json data) as `request body` and that is pushed to all connected clients
   
   - method: `POST`
+
+# Running on serve 
+- `python suggestor_api.py`

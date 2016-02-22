@@ -22,3 +22,6 @@ A Python web framework and asynchronous networking library. We used it for expos
    
    - method: `GET`
    - param: `q` - the query to tokenize
+
+# Running on serve 
+- `python tokenizer_api.py`
