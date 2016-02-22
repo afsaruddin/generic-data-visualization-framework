@@ -47,9 +47,9 @@
         <div class="row other-charts">
           <div class="col-md-12">
             <div class="pull-right">
-              <a href="javascript:void(0);" title="Bar Chart" id="barChart"><i class="fa fa-bar-chart fa-2x"></i></a>
-              <a href="javascript:void(0);" title="Donut Chart" id="donutChart"><i class="fa fa-circle-o-notch fa-2x"></i></a>
-              <a href="javascript:void(0);" title="Pie Chart" id="pieChart"><i class="fa fa-pie-chart fa-2x"></i></a>
+              <a href="javascript:void(0);" title="Bar Chart" id="barChart" class="chartIcon" ><i class="fa fa-bar-chart fa-2x"></i></a>
+              <a href="javascript:void(0);" title="Donut Chart" id="donutChart" class="chartIcon"><i class="fa fa-circle-o-notch fa-2x"></i></a>
+              <a href="javascript:void(0);" title="Pie Chart" id="pieChart" class="chartIcon"><i class="fa fa-pie-chart fa-2x"></i></a>
             </div>
           </div>
         </div>
@@ -76,7 +76,7 @@
     $(function() {
 
       var populateData = function () {
-        $('.loader').css('display', 'block');
+        // $('.loader').css('display', 'block');
         resetUI();
         sendPostRequest();
       };

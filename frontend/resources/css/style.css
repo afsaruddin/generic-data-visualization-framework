@@ -35,6 +35,7 @@ html body {
 }
 .recent-query ul {
   padding-left: 10px !important;
+  height: 93% !important;
 }
 .recent-query ul span {
   font-size: 14px !important;

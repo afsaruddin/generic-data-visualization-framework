@@ -90,21 +90,36 @@
       });
     }
 
+    function initChartTooltip(data) {
+        if (data.length > 20) {
+          $(".chartIcon").attr("title", "Chart can't be created with this data!");
+        }
+        else {
+          $(".barChart").attr("title", "Bar Chart");
+          $(".pieChart").attr("title", "Pie Chart");
+          $(".donutChart").attr("title", "Donut Chart");
+        }
+    }
+
     function sendPostRequest (suggestionObject) {
       if (suggestionObject) {
+        $('.loader').css('display', 'block');
         $.ajax({
           type: "POST",
           url: "http://169.45.107.190:5000/queryhandler/",
           contentType: "application/json",
           data: JSON.stringify(suggestionObject),
           success: function(responseData) {
+            $('.loader').css('display', 'none');
             if (responseData.data) {
               chartData = responseData.data;
+              initChartTooltip(chartData);
               drawChart("bar", responseData.data);
               createTable(responseData.data);
             }
           },
           error: function(err){
+            $('.loader').css('display', 'none');
             console.log('Callback Error: ' + err);
           },
           dataType: "json"
@@ -119,12 +134,12 @@
 
     $("#donutChart").click(function() {
       selectedChart = "donut";
-      if (chartData) createPieChart(chartData, false);
+      if (chartData && chartData.length <=20 ) createPieChart(chartData, false);
     });
 
     $("#pieChart").click(function() {
       selectedChart = "pie";
-      if (chartData) createPieChart(chartData, true);
+      if (chartData && chartData.length <= 20) createPieChart(chartData, true);
     });
 
     function drawChart(chartType, data){
