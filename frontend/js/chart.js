@@ -8,11 +8,15 @@ var getTooltipHTML = function (value) {
 
 $('.recent-query-icon').click(function () {
   if ($('.recent-query').is(':visible')) {
-   $('#page-wrapper').css('margin', '0 auto');
-   $('.recent-query').css('display', 'none');
+    $('#page-wrapper').css('-webkit-transform', 'translate(0%,0)');
+    $( ".recent-query" ).hide( 500 );
+    // $('#page-wrapper').css('margin', '0 auto');
+  //  $('.recent-query').css('display', 'none');
   } else {
-   $('#page-wrapper').css('margin-left', '30px');
-   $('.recent-query').css('display', 'block');
+    $('#page-wrapper').css('-webkit-transform', 'translate(-20%,0)');
+    $( ".recent-query" ).show( 500 );
+    // $('#page-wrapper').css('margin-left', '30px');
+  //  $('.recent-query').css('display', 'block');
   }
 
 });

@@ -39,7 +39,7 @@ $(document).ready(function(){
             $(wrapper).addClass('recent-query');
 
             var header = createElement('div', {
-                innerText: "Recent Queryies"
+                innerText: "Recent Queries"
             }, {
                 background: "lightseagreen",
                 padding: "5px",
