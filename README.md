@@ -80,7 +80,7 @@ We are visualizing many things (*Features* section below) about this framework b
 - Demo is here: http://169.45.107.59/gdvf/ (please use Chrome / Safari for now as we tested only in these browsers)
 - Video:
 
-<a href="http://www.youtube.com/watch?feature=player_embedded&v=sPL0e2NbyEA" target="_blank"><img src="http://img.youtube.com/vi/sPL0e2NbyEA/0.jpg" alt="GDVF Demo Video" width="240" height="180" border="10" /></a>
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=6Ze49XSwKbE" target="_blank"><img src="http://img.youtube.com/vi/6Ze49XSwKbE/0.jpg" alt="GDVF Demo Video" width="240" height="180" border="10" /></a>
 
 ### Version History
 
