@@ -75,6 +75,10 @@ We are visualizing many things (*Features* section below) about this framework b
 
 - [Query Handler](query-handler/README.md): The [BFF](http://samnewman.io/patterns/architectural/bff/) endpoint to serve necessary stuffs to the frontend.
 
+### Demo
+
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=sPL0e2NbyEA" target="_blank"><img src="http://img.youtube.com/vi/sPL0e2NbyEA/0.jpg" alt="GDVF Demo Video" width="240" height="180" border="10" /></a>
+
 ### Version History
 
 ##### 0.3 (22, Feb 2016)

@@ -31,7 +31,7 @@ $(document).ready(function(){
                 display: "none",
                 width: "25%",
                 height: "500px",
-                position: "absolute",
+                position: "fixed",
                 top: 0,
                 right: 0,
                 border: "1px solid #DDDDDD"
