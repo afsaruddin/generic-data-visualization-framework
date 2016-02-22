@@ -110,7 +110,7 @@ public class Query2SQLHandler {
         }
 
         return new Query2SQLResponse(
-                " SELECT " + selectSpec + " FROM " + relationToSearchIn.getFromSpec()
+                " SELECT " + selectSpec + " FROM " + relationToSearchIn.getFromSpec() + " LIMIT 20"
         );
     }
 
