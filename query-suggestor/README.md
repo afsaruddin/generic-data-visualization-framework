@@ -14,6 +14,8 @@ We suggest to install the whole `build-essential` and `python-dev`
 
 `apt-get install build-essential python-dev`
 
+`pip install numpy`
+
 ##### [Tornado](http://www.tornadoweb.org/en/stable/)
 A Python web framework and asynchronous networking library. We used it for establishing the websocket communication between the users and for exposing a http API for `Query Handler` module by which it will feed query history to all currently connected user.
 
