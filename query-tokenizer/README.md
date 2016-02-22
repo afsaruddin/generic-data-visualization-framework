@@ -11,7 +11,7 @@ Natural Language Toolkit http://www.nltk.org/install.html
 
 `python -m nltk.downloader all`
 
-##### Tornado (if you haven't already install it for `query-suggestor` module)
+##### [Tornado](http://www.tornadoweb.org/en/stable/) (if you haven't already install it for `query-suggestor` module)
 A Python web framework and asynchronous networking library. We used it for exposing a http API for `querytoken-to-sql` module.
 
 `pip install tornado`
@@ -23,5 +23,8 @@ A Python web framework and asynchronous networking library. We used it for expos
    - method: `GET`
    - param: `q` - the query to tokenize
 
-# Running on serve 
+    ###### Example
+   `curl http://169.44.61.115:9091/querytotoken?q=show%20tour%20cost`
+
+# Running on server
 - `python tokenizer_api.py`

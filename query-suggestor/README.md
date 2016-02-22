@@ -13,7 +13,7 @@ We suggest to install the whole `build-essential` and `python-dev`
 
 `apt-get install build-essential python-dev`
 
-##### Tornado
+##### [Tornado](http://www.tornadoweb.org/en/stable/)
 A Python web framework and asynchronous networking library. We used it for establishing the websocket communication between the users and for exposing a http API for `Query Handler` module by which it will feed query history to all currently connected user.
 
 `pip install tornado`
@@ -22,9 +22,12 @@ A Python web framework and asynchronous networking library. We used it for estab
 ##### websocket endpoint
 - `ws`://ip:port`/ws` (recieves a query and sends suggestions for that)
 ##### http endpoint
-- `/pushhistory` - recievs query(json data) as `request body` and that is pushed to all connected clients
+- `/pushhistory` - recievs query(json data) as `request body` that is pushed to all connected clients
   
   - method: `POST`
+  
+  ###### Example
+   `curl -H "Content-Type: application/json" -X POST -d '{"query":"tour cost employee"}' http://169.44.61.115:9090/pushhistory`
 
-# Running on serve 
+# Running on server
 - `python suggestor_api.py`
