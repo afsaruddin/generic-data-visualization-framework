@@ -3,6 +3,7 @@ This module is responsible for suggesting possible correct queries to the raw qu
 For publishing the suggestions, it will have 2 way WebSocket communications.
 
 # Dependencies
+
 ##### Python 2.7.9
 
 ##### NumPy
@@ -19,15 +20,27 @@ A Python web framework and asynchronous networking library. We used it for estab
 `pip install tornado`
 
 # API Endpoints
+
 ##### websocket endpoint
-- `ws`://ip:port`/ws` (recieves a query and sends suggestions for that)
+
+Recieves a query and sends suggestions for that.
+
+- Url: ws://169.44.61.115:9090/ws ( Example endpoint; Deployed in [Koding VM](https://koding.com) )
+
 ##### http endpoint
-- `/pushhistory` - recievs query(json data) as `request body` that is pushed to all connected clients
-  
-  - method: `POST`
-  
-  ###### Example
-   `curl -H "Content-Type: application/json" -X POST -d '{"query":"tour cost employee"}' http://169.44.61.115:9090/pushhistory`
+
+Recievs query(json data) as `request body` that is pushed to all connected clients.
+
+- Url: http://169.44.61.115:9090/pushhistory
+- Method: POST
+- Example:
+
+```bash
+    curl -H "Content-Type: application/json" -X POST -d '{"query":"tour cost employee"}' http://169.44.61.115:9090/pushhistory
+```
 
 # Running on server
-- `python suggestor_api.py`
+```bash
+    python suggestor_api.py
+```
+
