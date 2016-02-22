@@ -2,6 +2,12 @@ html body {
   width: 100%;
   /*background-color: #3498db*/
 }
+
+.alert {
+    margin-top: 20px;
+    display: none;
+}
+
 #page-wrapper {
   width: 65%;
   margin: 0 auto;
@@ -95,4 +101,11 @@ div.tooltip {
 
 .table tbody tr:hover {
   background-color: lightcyan !important;
+}
+
+.no-records{
+  display: none;
+  padding: 0;
+  width: 500px;
+  margin: 20px;
 }

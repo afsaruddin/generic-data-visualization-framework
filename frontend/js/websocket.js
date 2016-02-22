@@ -93,29 +93,39 @@
     function initChartTooltip(data) {
         if (data.length > 20) {
           $(".chartIcon").attr("title", "Chart can't be created with this data!");
+          return false;
         }
         else {
           $(".barChart").attr("title", "Bar Chart");
           $(".pieChart").attr("title", "Pie Chart");
           $(".donutChart").attr("title", "Donut Chart");
         }
+        return true;
     }
 
     function sendPostRequest (suggestionObject) {
       if (suggestionObject) {
         $('.loader').css('display', 'block');
+        $(".no-records").css("display" , "none");
         $.ajax({
           type: "POST",
           url: "http://169.45.107.190:5000/queryhandler/",
           contentType: "application/json",
           data: JSON.stringify(suggestionObject),
           success: function(responseData) {
+            console.log(responseData);
             $('.loader').css('display', 'none');
-            if (responseData.data) {
+            // $(".no-records").css("display" , "none");
+            if (responseData.success && responseData.data) {
               chartData = responseData.data;
-              initChartTooltip(chartData);
-              drawChart("bar", responseData.data);
+              var isChartDrawPossible =  initChartTooltip(chartData);
+              if (isChartDrawPossible) {
+                drawChart("bar", responseData.data);
+              }
               createTable(responseData.data);
+            }
+            else {
+              $(".no-records").css("display" , "block");
             }
           },
           error: function(err){

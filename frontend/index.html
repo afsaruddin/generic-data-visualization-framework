@@ -44,6 +44,11 @@
           </div>
         </div>
 
+        <div class="alert alert-info no-records">
+          <!-- <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a> -->
+          <strong>Info!</strong> No records found!
+        </div>
+
         <div class="row other-charts">
           <div class="col-md-12">
             <div class="pull-right">
@@ -78,7 +83,12 @@
       var populateData = function () {
         // $('.loader').css('display', 'block');
         resetUI();
-        sendPostRequest();
+        var searchString = $("#searchBox").val().trim();
+        if (searchString) {
+            searchString = { text: searchString };
+            sendPostRequest(searchString);
+        }
+
       };
 
       $("#go").click(function() {
