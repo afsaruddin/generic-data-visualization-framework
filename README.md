@@ -77,9 +77,14 @@ We are visualizing many things (*Features* section below) about this framework b
 
 ### Version History
 
-##### 0.2 (22, Feb 2016)
+##### 0.3 (22, Feb 2016)
 
 - A "demo-able" version :)
+- Bug fixes in modules.
+- Frontend UI is made a bit nicer.
+
+##### 0.2 (22, Feb 2016)
+
 - `frontend` module shows a simple searchbox, result data table / charts and a live query streaming.
 
 ##### 0.1 (21, Feb 2016)
