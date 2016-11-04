@@ -1,3 +1,1 @@
-frontend/resources/bootstrap/* linguist-vendored
-frontend/resources/d3/* linguist-vendored
-frontend/resources/font-awesome/* linguist-vendored
+frontend/resources/** linguist-vendored
