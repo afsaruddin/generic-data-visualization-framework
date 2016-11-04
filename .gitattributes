@@ -1,1 +1,2 @@
 frontend/resources/** linguist-vendored
+frontend/resources/css/** linguist-vendored=false
